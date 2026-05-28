@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RHL Security">
+<meta name="theme-color" content="#0a1628">
+<title>RHL Security Report</title>
+
+<!-- PWA Manifest injected inline via JS below -->
+<!-- Apple touch icon injected inline via JS below -->
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --navy: #0a1628;
+  --blue: #1a3a6b;
+  --gold: #c9a84c;
+  --gold-l: #e8c97a;
+  --mist: #f4f6fa;
+  --white: #ffffff;
+  --border: #c5cfe0;
+  --text: #1a2540;
+  --sub: #5a6a8a;
+  --red: #c0392b;
+  --green: #1a7a4a;
+  --r: 6px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--navy);
+  min-height: 100vh;
+  padding: 24px 16px 80px;
+  color: var(--text);
+}
+
+/* ── INSTALL BANNER ── */
+#install-banner {
+  display: none;
+  background: var(--gold);
+  color: var(--navy);
+  padding: 12px 18px;
+  border-radius: var(--r);
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+#install-banner.show { display: flex; }
+#install-banner button {
+  background: var(--navy);
+  color: var(--gold);
+  border: none;
+  border-radius: 4px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+#install-banner .dismiss {
+  background: transparent;
+  color: var(--navy);
+  opacity: 0.6;
+  padding: 7px 8px;
+}
+
+/* ── OFFLINE BADGE ── */
+#offline-badge {
+  display: none;
+  background: #c0392b;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+#offline-badge.show { display: block; }
+
+.wrapper { max-width: 720px; margin: 0 auto; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--white);
+  border-radius: var(--r) var(--r) 0 0;
+  border-bottom: 4px solid var(--gold);
+  padding: 22px 24px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.logo-mark {
+  width: 56px; height: 56px;
+  background: var(--navy);
+  border-radius: 8px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative; overflow: hidden;
+}
+.logo-mark::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--gold);
+}
+.logo-letters {
+  font-weight: 700; font-size: 20px;
+  color: var(--white); letter-spacing: 1px;
+  line-height: 1; margin-top: 3px;
+}
+.logo-sub {
+  font-size: 6.5px; font-weight: 500;
+  color: var(--gold); letter-spacing: 1.5px;
+  text-transform: uppercase; margin-top: 3px;
+}
+.header-text h1 { font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.header-text p { font-size: 11px; color: var(--sub); margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 500; }
+
+/* ── FORM CARD ── */
+.form-card {
+  background: var(--white);
+  padding: 24px 20px;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.8px; text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 7px;
+  margin-bottom: 16px; margin-top: 28px;
+}
+.section-title:first-of-type { margin-top: 0; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+.field-row.single { grid-template-columns: 1fr; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+label { font-size: 10px; font-weight: 600; color: var(--sub); letter-spacing: 0.8px; text-transform: uppercase; }
+
+input[type="text"], input[type="time"], input[type="date"], input[type="number"], select, textarea {
+  font-family: inherit; font-size: 15px; color: var(--text);
+  background: var(--mist); border: 1.5px solid var(--border);
+  border-radius: var(--r); padding: 11px 13px;
+  outline: none; width: 100%;
+  -webkit-appearance: none; appearance: none;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--blue); background: #fff;
+  box-shadow: 0 0 0 3px rgba(26,58,107,0.08);
+}
+textarea { resize: vertical; min-height: 76px; }
+
+/* ── STATUS TOGGLES ── */
+.status-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.status-btn {
+  padding: 9px 18px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--mist);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--sub); cursor: pointer;
+  transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+}
+.status-btn.clear { background: #e8f5ee; border-color: var(--green); color: var(--green); }
+.status-btn.issues { background: #fdecea; border-color: var(--red); color: var(--red); }
+
+/* ── CHECK BLOCKS ── */
+.check-block {
+  background: var(--mist); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px; margin-bottom: 12px;
+}
+.check-block-title {
+  font-size: 12px; font-weight: 700; color: var(--navy);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
+}
+.check-block-title::before {
+  content: ''; display: inline-block;
+  width: 3px; height: 13px; background: var(--gold); border-radius: 2px;
+}
+.check-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
+.issue-notes { display: none; margin-top: 11px; }
+.issue-notes.visible { display: block; }
+
+/* ── FOOTER ── */
+.footer-bar {
+  background: var(--navy);
+  padding: 18px 20px;
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.footer-note { font-size: 10px; color: rgba(255,255,255,0.42); font-family: 'IBM Plex Mono', monospace; }
+.footer-note strong { color: var(--gold-l); font-weight: 500; }
+
+.btn-generate {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--gold); color: var(--navy);
+  border: none; border-radius: var(--r);
+  padding: 14px 24px;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  letter-spacing: 0.4px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+.btn-generate:hover { background: var(--gold-l); }
+.btn-generate:active { transform: scale(0.97); }
+.btn-generate svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+.audit-stamp {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px; color: var(--sub);
+  background: var(--mist); border: 1px dashed var(--border);
+  border-radius: 4px; padding: 9px 13px; margin-top: 10px;
+}
+
+.contact-footnote {
+  text-align: center; padding: 14px 20px;
+  font-size: 11.5px; color: rgba(255,255,255,0.32);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  background: var(--navy);
+  border-radius: 0 0 var(--r) var(--r);
+}
+.contact-footnote a { color: var(--gold-l); text-decoration: none; }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(14px);
+  background: var(--navy); color: var(--white);
+  border: 1px solid var(--gold); border-radius: var(--r);
+  padding: 12px 20px; font-size: 13px; font-weight: 500;
+  opacity: 0; transition: all 0.28s; pointer-events: none;
+  z-index: 9999; white-space: nowrap; max-width: 90vw;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── LOADING OVERLAY ── */
+#loading {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,22,40,0.75); z-index: 10000;
+  align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+}
+#loading.show { display: flex; }
+#loading .spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(201,168,76,0.3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+#loading p { color: var(--white); font-size: 13px; font-weight: 500; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 520px) {
+  .field-row, .field-row.triple { grid-template-columns: 1fr; }
+  .check-inner { grid-template-columns: 1fr; }
+  .footer-bar { flex-direction: column; align-items: stretch; }
+  .btn-generate { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div id="install-banner">
+    <span>📲 Add RHL Security to your home screen for instant offline access</span>
+    <div style="display:flex;gap:6px;flex-shrink:0">
+      <button onclick="doInstall()">Install App</button>
+      <button class="dismiss" onclick="dismissBanner()">✕</button>
+    </div>
+  </div>
+  <div id="offline-badge">⚡ Offline Mode — PDF generation still works</div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-mark">
+      <div class="logo-letters">RHL</div>
+      <div class="logo-sub">Security</div>
+    </div>
+    <div class="header-text">
+      <h1>Rangeview Heights Limited</h1>
+      <p>Hourly Routine Report — Security Ops</p>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card">
+    <div class="section-title">Report Details</div>
+    <div class="field-row triple">
+      <div class="field">
+        <label>Report Date</label>
+        <input type="date" id="reportDate">
+      </div>
+      <div class="field">
+        <label>Report Time</label>
+        <input type="time" id="reportTime">
+      </div>
+      <div class="field">
+        <label>Submitted By</label>
+        <input type="text" id="submittedBy" placeholder="Officer / ID">
+      </div>
+    </div>
+    <div id="auditStamp" class="audit-stamp" style="display:none"></div>
+
+    <div class="section-title">Foot Traffic</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Total Count</label>
+        <input type="number" id="footTraffic" placeholder="e.g. 1204" min="0">
+      </div>
+      <div class="field">
+        <label>Observation Notes</label>
+        <input type="text" id="footTrafficNotes" placeholder="Optional">
+      </div>
+    </div>
+
+    <div class="section-title">Mall Toilets Status</div>
+
+    <div class="check-block">
+      <div class="check-block-title">Male Toilets</div>
+      <div class="check-inner">
+        <div class="field">
+          <label>Checked By</label>
+          <input type="text" id="maleToiletOfficer" placeholder="e.g. Oscar 8">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <div class="status-group">
+            <button type="button" class="status-btn" onclick="setStatus(this,'maleToiletStatus','clear')">✓ Clear</button>
+            <button type="button" class="status-btn" onclick="setStatus(this,'maleToiletStatus','issues')">⚠ Issues</button>
+          </div>
+          <input type="hidden" id="maleToiletStatus" value="">
+        </div>
+      </div>
+      <div class="issue-notes" id="maleToiletNotesWrap">
+        <div class="field"><label>Issue Details</label><textarea id="maleToiletIssues" placeholder="Describe the issue..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="check-block">
+      <div class="check-block-title">Female Toilets</div>
+      <div class="check-inner">
+        <div class="field">
+          <label>Checked By</label>
+          <input type="text" id="femaleToiletOfficer" placeholder="e.g. Ruth">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <div class="status-group">
+            <button type="button" class="status-btn" onclick="setStatus(this,'femaleToiletStatus','clear')">✓ Clear</button>
+            <button type="button" class="status-btn" onclick="setStatus(this,'femaleToiletStatus','issues')">⚠ Issues</button>
+          </div>
+          <input type="hidden" id="femaleToiletStatus" value="">
+        </div>
+      </div>
+      <div class="issue-notes" id="femaleToiletNotesWrap">
+        <div class="field"><label>Issue Details</label><textarea id="femaleToiletIssues" placeholder="Describe the issue..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="section-title">Staircase Checks</div>
+    <div class="check-block">
+      <div class="check-block-title">Levels 1–3</div>
+      <div class="check-inner">
+        <div class="field">
+          <label>Checked By</label>
+          <input type="text" id="staircaseOfficer" placeholder="e.g. Oscar 7">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <div class="status-group">
+            <button type="button" class="status-btn" onclick="setStatus(this,'staircaseStatus','clear')">✓ Clear</button>
+            <button type="button" class="status-btn" onclick="setStatus(this,'staircaseStatus','issues')">⚠ Issues</button>
+          </div>
+          <input type="hidden" id="staircaseStatus" value="">
+        </div>
+      </div>
+      <div class="field" style="margin-top:11px">
+        <label>Escorted By (if applicable)</label>
+        <input type="text" id="staircaseEscort" placeholder="e.g. SS8 (Level 3)">
+      </div>
+      <div class="issue-notes" id="staircaseNotesWrap">
+        <div class="field"><label>Issue Details</label><textarea id="staircaseIssues" placeholder="Describe the issue..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="section-title">Unit Accountability</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Location</label>
+        <input type="text" id="unitLocation" value="Loliwara">
+      </div>
+      <div class="field">
+        <label>All Units Accounted?</label>
+        <div class="status-group">
+          <button type="button" class="status-btn" onclick="setStatus(this,'unitsStatus','yes')">✓ Yes</button>
+          <button type="button" class="status-btn" onclick="setStatus(this,'unitsStatus','no')">✗ No</button>
+        </div>
+        <input type="hidden" id="unitsStatus" value="">
+      </div>
+    </div>
+    <div class="issue-notes" id="unitsNotesWrap" style="margin-top:10px">
+      <div class="field"><label>Missing / Unaccounted Units</label><textarea id="unitsIssues" placeholder="List missing units..."></textarea></div>
+    </div>
+
+    <div class="section-title">Fire Emergency — Staircases &amp; Pathways</div>
+
+    <div class="check-block">
+      <div class="check-block-title">Fire Staircase A</div>
+      <div class="check-inner">
+        <div class="field">
+          <label>Checked By</label>
+          <input type="text" id="fireAOfficer" placeholder="Officer name / ID">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <div class="status-group">
+            <button type="button" class="status-btn" onclick="setStatus(this,'fireAStatus','clear')">✓ Clear</button>
+            <button type="button" class="status-btn" onclick="setStatus(this,'fireAStatus','issues')">⚠ Issues</button>
+          </div>
+          <input type="hidden" id="fireAStatus" value="">
+        </div>
+      </div>
+      <div class="issue-notes" id="fireANotesWrap">
+        <div class="field"><label>Issue Details</label><textarea id="fireAIssues" placeholder="Describe obstruction or issue..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="check-block">
+      <div class="check-block-title">Fire Staircase B</div>
+      <div class="check-inner">
+        <div class="field">
+          <label>Checked By</label>
+          <input type="text" id="fireBOfficer" placeholder="Officer name / ID">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <div class="status-group">
+            <button type="button" class="status-btn" onclick="setStatus(this,'fireBStatus','clear')">✓ Clear</button>
+            <button type="button" class="status-btn" onclick="setStatus(this,'fireBStatus','issues')">⚠ Issues</button>
+          </div>
+          <input type="hidden" id="fireBStatus" value="">
+        </div>
+      </div>
+      <div class="issue-notes" id="fireBNotesWrap">
+        <div class="field"><label>Issue Details</label><textarea id="fireBIssues" placeholder="Describe obstruction or issue..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="check-block">
+      <div class="check-block-title">Emergency Pathways &amp; Exit Signs</div>
+      <div class="check-inner">
+        <div class="field">
+          <label>Checked By</label>
+          <input type="text" id="pathwayOfficer" placeholder="Officer name / ID">
+        </div>
+        <div class="field">
+          <label>Status</label>
+          <div class="status-group">
+            <button type="button" class="status-btn" onclick="setStatus(this,'pathwayStatus','clear')">✓ Clear</button>
+            <button type="button" class="status-btn" onclick="setStatus(this,'pathwayStatus','issues')">⚠ Issues</button>
+          </div>
+          <input type="hidden" id="pathwayStatus" value="">
+        </div>
+      </div>
+      <div class="field" style="margin-top:11px">
+        <label>Locations Checked</label>
+        <input type="text" id="pathwayLocations" placeholder="e.g. L1 East Exit, L2 North Corridor">
+      </div>
+      <div class="issue-notes" id="pathwayNotesWrap">
+        <div class="field"><label>Issue Details</label><textarea id="pathwayIssues" placeholder="Describe obstruction, damaged signage, etc..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="section-title">Evidence Photos</div>
+    <div class="check-block">
+      <div class="check-block-title">Attach Photos</div>
+      <p style="font-size:12px;color:var(--sub);margin-bottom:12px;">Photos are embedded in the PDF report. Max 4 photos recommended.</p>
+      <div class="field">
+        <label>Select Images</label>
+        <input type="file" id="evidencePhotos" accept="image/*" multiple style="font-size:13px;padding:8px;background:var(--white);border:1.5px dashed var(--border);border-radius:var(--r);width:100%;cursor:pointer;">
+      </div>
+      <div id="photoPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+      <div id="photoCount" style="font-size:11px;color:var(--sub);margin-top:6px;font-family:'IBM Plex Mono',monospace;"></div>
+    </div>
+
+    <div class="section-title">Additional Remarks</div>
+    <div class="field-row single">
+      <div class="field"><textarea id="remarks" placeholder="Incidents, observations, notes for this period..." style="min-height:88px"></textarea></div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <div class="footer-note">
+      Opened: <strong id="openTime"></strong><br>
+      Timestamped on generate
+    </div>
+    <button class="btn-generate" onclick="generateReport()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="18" x2="12" y2="12"/>
+        <line x1="9" y1="15" x2="15" y2="15"/>
+      </svg>
+      Generate &amp; Download PDF
+    </button>
+  </div>
+
+  <div class="contact-footnote">
+    Questions? Contact <strong>Ghani Gomuna</strong> —
+    <a href="mailto:ggomuna@rangeview.com.pg">ggomuna@rangeview.com.pg</a>
+    &nbsp;|&nbsp; Rangeview Heights Limited &copy; <span id="year"></span>
+  </div>
+</div>
+
+<div id="loading"><div class="spinner"></div><p>Generating PDF…</p></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// ══════════════════════════════════════════════
+//  PWA SETUP — manifest + service worker via blobs
+// ══════════════════════════════════════════════
+
+// 1. Inject Web App Manifest inline
+(function() {
+  const manifest = {
+    name: "RHL Security Report",
+    short_name: "RHL Security",
+    description: "Rangeview Heights Limited — Hourly Security Routine Report",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#0a1628",
+    theme_color: "#0a1628",
+    orientation: "portrait-primary",
+    icons: [
+      { src: makeSvgIcon(192), sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" },
+      { src: makeSvgIcon(512), sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+    ]
+  };
+
+  function makeSvgIcon(size) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="18" fill="#0a1628"/>
+      <rect width="100" height="5" fill="#c9a84c"/>
+      <text x="50" y="54" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="32" fill="white">RHL</text>
+      <text x="50" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="#c9a84c" letter-spacing="3">SECURITY</text>
+    </svg>`;
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+
+  // Patch icons with actual data URIs
+  manifest.icons[0].src = makeSvgIcon(192);
+  manifest.icons[1].src = makeSvgIcon(512);
+
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+
+  // Apple touch icon
+  const appleIcon = document.createElement('link');
+  appleIcon.rel = 'apple-touch-icon';
+  appleIcon.href = makeSvgIcon(180);
+  document.head.appendChild(appleIcon);
+})();
+
+// 2. Service Worker — uses sw.js if on HTTPS/github.io, blob fallback for local
+if ('serviceWorker' in navigator) {
+  const isHosted = location.protocol === 'https:';
+  const swCode = `
+const CACHE_NAME = 'rhl-security-v2';
+const CACHED_URLS = [self.location.href.split('/sw.js')[0] + '/'];
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(c => {
+      return Promise.allSettled(CACHED_URLS.map(u => c.add(u)));
+    }).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+    )).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      const fetchPromise = fetch(e.request).then(resp => {
+        if (resp && resp.status === 200) {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+        }
+        return resp;
+      }).catch(() => cached);
+      return cached || fetchPromise;
+    })
+  );
+});
+`;
+  const swBlob = new Blob([swCode], {type: 'application/javascript'});
+  const swUrl = URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swUrl, {scope: './'})
+    .then(reg => {
+      console.log('SW registered:', reg.scope);
+      // Force update check
+      reg.update();
+    })
+    .catch(e => console.log('SW note:', e.message));
+}
+
+// ══════════════════════════════════════════════
+//  INSTALL PROMPT
+// ══════════════════════════════════════════════
+let deferredPrompt = null;
+
+
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-banner').classList.remove('show');
+  showToast('✓ RHL Security installed to home screen!');
+  deferredPrompt = null;
+});
+
+function doInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(r => {
+      console.log('Install choice:', r.outcome);
+      if (r.outcome === 'accepted') {
+        showToast('✓ Installing RHL Security...');
+      } else {
+        // User dismissed — show again next time, clear the dismissed flag
+        localStorage.removeItem('rhl-install-dismissed');
+        showToast('Tap "Install App" anytime to add to home screen');
+      }
+      deferredPrompt = null;
+      document.getElementById('install-banner').classList.remove('show');
+    });
+  } else {
+    // deferredPrompt gone — guide user manually
+    const ua = navigator.userAgent;
+    if (/iphone|ipad/i.test(ua)) {
+      showToast('On iPhone: tap Share → Add to Home Screen');
+    } else {
+      showToast('Tap ⋮ menu in Chrome → Add to Home screen');
+    }
+  }
+}
+function dismissBanner() {
+  localStorage.setItem('rhl-install-dismissed', '1');
+  document.getElementById('install-banner').classList.remove('show');
+}
+
+// Re-show banner if dismissed previously but prompt fires again
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Always show banner when browser fires the prompt — ignore dismissed flag
+  document.getElementById('install-banner').classList.add('show');
+});
+
+// Offline/online indicator
+function updateOnlineStatus() {
+  document.getElementById('offline-badge').classList.toggle('show', !navigator.onLine);
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
+// ══════════════════════════════════════════════
+//  FORM LOGIC
+// ══════════════════════════════════════════════
+const openedAt = new Date();
+document.getElementById('openTime').textContent = fmt(openedAt);
+document.getElementById('year').textContent = openedAt.getFullYear();
+document.getElementById('reportDate').value = openedAt.toISOString().slice(0,10);
+
+function updateAudit() {
+  const s = document.getElementById('auditStamp');
+  s.style.display = 'block';
+  s.textContent = `⏱  Opened: ${fmt(openedAt)}  ·  Last edit: ${fmt(new Date())}`;
+}
+document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', updateAudit));
+
+function setStatus(btn, fieldId, value) {
+  btn.closest('.status-group').querySelectorAll('.status-btn').forEach(b => b.classList.remove('clear','issues'));
+  btn.classList.add(value === 'clear' || value === 'yes' ? 'clear' : 'issues');
+  document.getElementById(fieldId).value = value;
+  const map = {maleToiletStatus:'maleToiletNotesWrap', femaleToiletStatus:'femaleToiletNotesWrap',
+                staircaseStatus:'staircaseNotesWrap', unitsStatus:'unitsNotesWrap',
+                fireAStatus:'fireANotesWrap', fireBStatus:'fireBNotesWrap',
+                pathwayStatus:'pathwayNotesWrap'};
+  if (map[fieldId]) {
+    document.getElementById(map[fieldId]).classList.toggle('visible', value === 'issues' || value === 'no');
+  }
+  updateAudit();
+}
+
+function fmt(d) {
+  return d.toLocaleDateString('en-PG',{day:'2-digit',month:'short',year:'numeric'})
+    + ' ' + d.toLocaleTimeString('en-PG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+function v(id) { return (document.getElementById(id)?.value||'').trim(); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ══════════════════════════════════════════════
+//  PHOTO PREVIEW
+// ══════════════════════════════════════════════
+let attachedPhotos = []; // stores {dataUrl, name}
+
+document.getElementById('evidencePhotos').addEventListener('change', function() {
+  const files = Array.from(this.files).slice(0, 6);
+  attachedPhotos = [];
+  const preview = document.getElementById('photoPreview');
+  const count = document.getElementById('photoCount');
+  preview.innerHTML = '';
+  if (!files.length) { count.textContent = ''; return; }
+  count.textContent = `Processing ${files.length} photo(s)...`;
+  let done = 0;
+  files.forEach((file, i) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      attachedPhotos.push({dataUrl: e.target.result, name: file.name});
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.cssText = 'width:80px;height:80px;object-fit:cover;border-radius:4px;border:2px solid var(--border)';
+      preview.appendChild(img);
+      done++;
+      if (done === files.length) count.textContent = `✓ ${done} photo(s) attached — will embed in PDF`;
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+// ══════════════════════════════════════════════
+//  SEVERITY ENGINE
+// ══════════════════════════════════════════════
+function assessSeverity(issueTexts) {
+  // issueTexts: array of strings
+  const combined = issueTexts.join(' ').toLowerCase();
+  const critical = ['fire','smoke','flood','blood','injury','injured','assault','weapon','gun','knife','fight','unconscious','collapsed','break in','break-in','intruder','threat','emergency','explosion','bomb'];
+  const high = ['blocked','obstruct','stuck','locked','broken','damage','damaged','vandal','graffiti','leak','overflow','spill','missing','lost','stolen','theft','hazard','unsafe','fall','fell','trip'];
+  const medium = ['dirty','smell','odour','odor','smell','light','dark','bulb','door','window','crack','scratch','noise','complaint','dispute'];
+
+  let score = 0;
+  let matched = [];
+  critical.forEach(w => { if(combined.includes(w)) { score += 10; matched.push(w); } });
+  high.forEach(w => { if(combined.includes(w)) { score += 5; matched.push(w); } });
+  medium.forEach(w => { if(combined.includes(w)) { score += 2; matched.push(w); } });
+
+  if (score >= 10) return { level: 'CRITICAL', color: [180,0,0], bg: [255,220,220], desc: 'Immediate action required. Escalate to management now.', matched };
+  if (score >= 5)  return { level: 'HIGH',     color: [192,57,43], bg: [254,235,220], desc: 'Significant issue. Resolve within 1 hour and notify supervisor.', matched };
+  if (score >= 2)  return { level: 'MEDIUM',   color: [180,100,0], bg: [255,245,220], desc: 'Moderate concern. Log and resolve by end of shift.', matched };
+  return               { level: 'LOW',      color: [26,122,74],  bg: [220,245,230], desc: 'Minor issue. Log for routine maintenance follow-up.', matched };
+}
+
+// ══════════════════════════════════════════════
+//  PDF GENERATION
+// ══════════════════════════════════════════════
+function generateReport() {
+  if (!window.jspdf) { showToast('⚠ PDF library loading — try again in a moment'); return; }
+  const { jsPDF } = window.jspdf;
+  document.getElementById('loading').classList.add('show');
+
+  setTimeout(() => {
+    try {
+      const issues = collectIssues();
+      buildRoutinePDF(jsPDF);
+      if (issues.length > 0) {
+        setTimeout(() => {
+          buildIncidentPDF(jsPDF, issues);
+          showToast(`✓ 2 PDFs downloaded — Routine + Incident Report`);
+        }, 800);
+      } else {
+        showToast(`✓ Report downloaded — No issues recorded`);
+      }
+    }
+    catch(e) { console.error(e); showToast('Error generating PDF'); }
+    finally { document.getElementById('loading').classList.remove('show'); }
+  }, 60);
+}
+
+function collectIssues() {
+  const checks = [
+    {area:'Male Toilets',    status: v('maleToiletStatus'),   detail: v('maleToiletIssues'),   officer: v('maleToiletOfficer')},
+    {area:'Female Toilets',  status: v('femaleToiletStatus'),  detail: v('femaleToiletIssues'),  officer: v('femaleToiletOfficer')},
+    {area:'Staircase L1-3',  status: v('staircaseStatus'),    detail: v('staircaseIssues'),    officer: v('staircaseOfficer')},
+    {area:'Unit Accountability', status: v('unitsStatus')==='no'?'issues':'', detail: v('unitsIssues'), officer: v('submittedBy')},
+    {area:'Fire Staircase A',status: v('fireAStatus'),        detail: v('fireAIssues'),        officer: v('fireAOfficer')},
+    {area:'Fire Staircase B',status: v('fireBStatus'),        detail: v('fireBIssues'),        officer: v('fireBOfficer')},
+    {area:'Emergency Pathways', status: v('pathwayStatus'),   detail: v('pathwayIssues'),      officer: v('pathwayOfficer')},
+  ];
+  return checks.filter(c => c.status === 'issues' && c.detail);
+}
+
+function buildRoutinePDF(jsPDF) {
+  const doc = new jsPDF({unit:'mm', format:'a4'});
+  const W = 210, mL = 18, mR = 18, cW = W - mL - mR;
+  const now = new Date();
+
+  const rDate = v('reportDate'), rTime = v('reportTime');
+  const by = v('submittedBy')||'Not specified';
+  const ft = v('footTraffic')||'—', ftN = v('footTrafficNotes');
+  const mO = v('maleToiletOfficer')||'—', mS = v('maleToiletStatus'), mI = v('maleToiletIssues');
+  const fO = v('femaleToiletOfficer')||'—', fS = v('femaleToiletStatus'), fI = v('femaleToiletIssues');
+  const scO = v('staircaseOfficer')||'—', scE = v('staircaseEscort'), scS = v('staircaseStatus'), scI = v('staircaseIssues');
+  const uL = v('unitLocation')||'Loliwara', uS = v('unitsStatus'), uI = v('unitsIssues');
+  const faO = v('fireAOfficer')||'—', faS = v('fireAStatus'), faI = v('fireAIssues');
+  const fbO = v('fireBOfficer')||'—', fbS = v('fireBStatus'), fbI = v('fireBIssues');
+  const pwO = v('pathwayOfficer')||'—', pwS = v('pathwayStatus'), pwL = v('pathwayLocations'), pwI = v('pathwayIssues');
+  const rem = v('remarks');
+
+  const dispDate = rDate
+    ? new Date(rDate+'T12:00:00').toLocaleDateString('en-PG',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+    : '—';
+  const timeLabel = rTime || '—';
+
+  let y = 0;
+
+  // Header
+  doc.setFillColor(10,22,40); doc.rect(0,0,W,38,'F');
+  doc.setFillColor(201,168,76); doc.rect(0,38,W,2,'F');
+  doc.setFillColor(26,58,107); doc.roundedRect(mL,7,24,24,2,2,'F');
+  doc.setTextColor(201,168,76); doc.setFontSize(13); doc.setFont('helvetica','bold');
+  doc.text('RHL',mL+12,20,{align:'center'});
+  doc.setFontSize(5.5); doc.setFont('helvetica','normal');
+  doc.text('SECURITY',mL+12,25.5,{align:'center'});
+  doc.setTextColor(255,255,255); doc.setFontSize(14); doc.setFont('helvetica','bold');
+  doc.text('Rangeview Heights Limited',mL+28,17);
+  doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(180,200,230);
+  doc.text('HOURLY ROUTINE REPORT  —  SECURITY OPERATIONS',mL+28,24);
+  doc.setFillColor(201,168,76); doc.roundedRect(W-mR-36,10,36,18,3,3,'F');
+  doc.setTextColor(10,22,40); doc.setFontSize(16); doc.setFont('helvetica','bold');
+  doc.text(timeLabel,W-mR-18,22,{align:'center'});
+
+  y=50;
+  // Meta row
+  doc.setFillColor(244,246,250); doc.rect(mL,y,cW,16,'F');
+  doc.setDrawColor(197,207,224); doc.rect(mL,y,cW,16,'S');
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(90,106,138);
+  doc.text('DATE',mL+5,y+6);
+  doc.setFont('helvetica','normal'); doc.setTextColor(26,37,64);
+  doc.text(dispDate,mL+5,y+12);
+  doc.setFont('helvetica','bold'); doc.setTextColor(90,106,138);
+  doc.text('SUBMITTED BY',mL+cW/2,y+6);
+  doc.setFont('helvetica','normal'); doc.setTextColor(26,37,64);
+  doc.text(by,mL+cW/2,y+12);
+  y+=24;
+
+  function sec(t) {
+    doc.setFillColor(10,22,40); doc.rect(mL,y,cW,8,'F');
+    doc.setTextColor(201,168,76); doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+    doc.text(t.toUpperCase(),mL+4,y+5.5); y+=12;
+  }
+  function fp(lbl,val,x,fy) {
+    doc.setFontSize(7); doc.setFont('helvetica','bold'); doc.setTextColor(90,106,138);
+    doc.text(lbl,x,fy);
+    doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(26,37,64);
+    doc.text(val||'—',x,fy+5.5);
+  }
+  function badge(st,x,by2) {
+    const good=st==='clear'||st==='yes';
+    const lbl=st==='clear'?'CLEAR':st==='issues'?'ISSUES REPORTED':st==='yes'?'ACCOUNTED':st==='no'?'MISSING UNITS':'—';
+    if(st){
+      doc.setFillColor(...(good?[26,122,74]:[192,57,43]));
+      doc.roundedRect(x,by2-4,40,7,1.5,1.5,'F');
+      doc.setTextColor(255,255,255); doc.setFontSize(6.5); doc.setFont('helvetica','bold');
+      doc.text(lbl,x+20,by2+0.5,{align:'center'});
+    } else {
+      doc.setTextColor(160,160,160); doc.setFontSize(8); doc.setFont('helvetica','italic');
+      doc.text('Not set',x,by2+1);
+    }
+  }
+  function issue(txt,iy) {
+    if(!txt) return iy;
+    const lines=doc.splitTextToSize('! '+txt,cW-10);
+    const h=lines.length*4.5+6;
+    doc.setFillColor(254,242,241); doc.setDrawColor(192,57,43);
+    doc.rect(mL,iy,cW,h,'FD');
+    doc.setFontSize(7.5); doc.setFont('helvetica','italic'); doc.setTextColor(150,30,20);
+    doc.text(lines,mL+4,iy+5); return iy+h+4;
+  }
+  function row(h) {
+    doc.setFillColor(244,246,250); doc.setDrawColor(197,207,224);
+    doc.rect(mL,y,cW,h,'FD');
+  }
+
+  sec('Foot Traffic');
+  row(18); fp('TOTAL COUNT',ft,mL+5,y+6);
+  if(ftN) fp('NOTES',ftN,mL+cW/2,y+6);
+  y+=22;
+
+  sec('Mall Toilets Status');
+  row(20); doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(10,22,40);
+  doc.text('Male Toilets',mL+5,y+7); fp('CHECKED BY',mO,mL+5,y+11); badge(mS,mL+cW/2,y+14); y+=24;
+  if(mS==='issues'&&mI) y=issue(mI,y);
+  row(20); doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(10,22,40);
+  doc.text('Female Toilets',mL+5,y+7); fp('CHECKED BY',fO,mL+5,y+11); badge(fS,mL+cW/2,y+14); y+=24;
+  if(fS==='issues'&&fI) y=issue(fI,y);
+
+  sec('Staircase Checks');
+  row(22); doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(10,22,40);
+  doc.text('Levels 1-3',mL+5,y+7);
+  fp('CHECKED BY',scO,mL+5,y+12);
+  if(scE) fp('ESCORTED BY',scE,mL+cW*0.38,y+12);
+  badge(scS,mL+cW*0.7,y+15); y+=26;
+  if(scS==='issues'&&scI) y=issue(scI,y);
+
+  sec('Unit Accountability');
+  row(18); fp('LOCATION',uL,mL+5,y+6); badge(uS,mL+cW/2,y+13); y+=22;
+  if(uS==='no'&&uI) y=issue(uI,y);
+
+  sec('Fire Emergency — Staircases & Pathways');
+  row(20); doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(10,22,40);
+  doc.text('Fire Staircase A',mL+5,y+7); fp('CHECKED BY',faO,mL+5,y+11); badge(faS,mL+cW/2,y+14); y+=24;
+  if(faS==='issues'&&faI) y=issue(faI,y);
+  row(20); doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(10,22,40);
+  doc.text('Fire Staircase B',mL+5,y+7); fp('CHECKED BY',fbO,mL+5,y+11); badge(fbS,mL+cW/2,y+14); y+=24;
+  if(fbS==='issues'&&fbI) y=issue(fbI,y);
+  row(22); doc.setFontSize(7.5); doc.setFont('helvetica','bold'); doc.setTextColor(10,22,40);
+  doc.text('Emergency Pathways & Exits',mL+5,y+7);
+  fp('CHECKED BY',pwO,mL+5,y+12);
+  if(pwL) fp('LOCATIONS',pwL,mL+cW*0.4,y+12);
+  badge(pwS,mL+cW*0.72,y+15); y+=26;
+  if(pwS==='issues'&&pwI) y=issue(pwI,y);
+
+  if(rem){
+    sec('Additional Remarks');
+    const lines=doc.splitTextToSize(rem,cW-10);
+    const rh=lines.length*4.5+10; row(rh);
+    doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(26,37,64);
+    doc.text(lines,mL+5,y+7); y+=rh+4;
+  }
+
+  // Evidence photos
+  if(attachedPhotos.length > 0) {
+    if(y > 220) { doc.addPage(); y = 20; }
+    sec('Evidence Photos');
+    const pW = (cW - 6) / 3;
+    const pH = pW * 0.75;
+    let px = mL, py = y;
+    attachedPhotos.forEach((ph, i) => {
+      try {
+        const fmt2 = ph.dataUrl.includes('png') ? 'PNG' : 'JPEG';
+        doc.addImage(ph.dataUrl, fmt2, px, py, pW, pH);
+        doc.setFontSize(6); doc.setTextColor(120,130,155);
+        const nm = ph.name.length > 18 ? ph.name.slice(0,15)+'...' : ph.name;
+        doc.text(nm, px + pW/2, py + pH + 3, {align:'center'});
+      } catch(e) {}
+      px += pW + 3;
+      if((i+1) % 3 === 0) { px = mL; py += pH + 8; }
+    });
+    y = py + pH + 12;
+  }
+
+  // Audit footer
+  y+=6;
+  doc.setDrawColor(197,207,224); doc.line(mL,y,mL+cW,y); y+=5;
+  doc.setFontSize(7); doc.setFont('helvetica','italic'); doc.setTextColor(120,130,155);
+  doc.text(`Time Audit  -  Form opened: ${fmt(openedAt)}   |   Report generated: ${fmt(now)}`,mL,y);
+  y+=4.5;
+  doc.text('This report was generated via the RHL Security Reporting System and is accurate as of the time of submission.',mL,y);
+
+  // Footer bar
+  doc.setFillColor(10,22,40); doc.rect(0,284,W,13,'F');
+  doc.setFillColor(201,168,76); doc.rect(0,284,W,1,'F');
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(160,175,200);
+  doc.text('For questions or concerns contact Ghani Gomuna  |  ggomuna@rangeview.com.pg  |  Rangeview Heights Limited',W/2,291.5,{align:'center'});
+
+  const sd=rDate||now.toISOString().slice(0,10);
+  const st=timeLabel.replace(':','h');
+  const fname=`RHL-Security-Report_${sd}_${st}.pdf`;
+  doc.save(fname);
+  showToast(`✓ Downloaded: ${fname}`);
+}
+// ══════════════════════════════════════════════
+//  INCIDENT REPORT PDF
+// ══════════════════════════════════════════════
+function buildIncidentPDF(jsPDF, issues) {
+  const doc = new jsPDF({unit:'mm', format:'a4'});
+  const W=210, mL=18, mR=18, cW=W-mL-mR;
+  const now = new Date();
+  const rDate = v('reportDate'), rTime = v('reportTime');
+  const by = v('submittedBy')||'Not specified';
+  const timeLabel = rTime||'—';
+
+  // Assess overall severity from all issue texts
+  const allTexts = issues.map(i=>i.detail);
+  const sev = assessSeverity(allTexts);
+
+  // ── HEADER — red tone for incident
+  const hdrColor = sev.level==='CRITICAL' ? [140,0,0] : sev.level==='HIGH' ? [180,50,20] : [10,22,40];
+  doc.setFillColor(...hdrColor); doc.rect(0,0,W,38,'F');
+  doc.setFillColor(201,168,76); doc.rect(0,38,W,2,'F');
+
+  // Logo box
+  doc.setFillColor(26,58,107); doc.roundedRect(mL,7,24,24,2,2,'F');
+  doc.setTextColor(201,168,76); doc.setFontSize(13); doc.setFont('helvetica','bold');
+  doc.text('RHL',mL+12,20,{align:'center'});
+  doc.setFontSize(5.5); doc.setFont('helvetica','normal');
+  doc.text('SECURITY',mL+12,25.5,{align:'center'});
+
+  doc.setTextColor(255,255,255); doc.setFontSize(14); doc.setFont('helvetica','bold');
+  doc.text('Rangeview Heights Limited',mL+28,15);
+  doc.setFontSize(10); doc.setFont('helvetica','normal'); doc.setTextColor(255,200,200);
+  doc.text('INCIDENT REPORT — SECURITY OPERATIONS',mL+28,22);
+  doc.setFontSize(8); doc.setTextColor(200,200,200);
+  doc.text(`Generated from Hourly Report: ${timeLabel}  |  ${rDate}`,mL+28,29);
+
+  // Severity badge
+  doc.setFillColor(...sev.color); doc.roundedRect(W-mR-38,8,38,22,3,3,'F');
+  doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont('helvetica','bold');
+  doc.text(sev.level,W-mR-19,18,{align:'center'});
+  doc.setFontSize(6); doc.setFont('helvetica','normal');
+  doc.text('SEVERITY',W-mR-19,23,{align:'center'});
+
+  let y=50;
+
+  // Meta
+  doc.setFillColor(...sev.bg); doc.rect(mL,y,cW,16,'F');
+  doc.setDrawColor(197,207,224); doc.rect(mL,y,cW,16,'S');
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(90,106,138);
+  doc.text('DATE',mL+5,y+6); doc.text('REPORTED BY',mL+80,y+6); doc.text('REPORT TIME',mL+140,y+6);
+  doc.setFont('helvetica','normal'); doc.setTextColor(26,37,64);
+  doc.text(rDate||'—',mL+5,y+12); doc.text(by,mL+80,y+12); doc.text(timeLabel,mL+140,y+12);
+  y+=22;
+
+  // Severity assessment box
+  doc.setFillColor(...sev.bg); doc.setDrawColor(...sev.color);
+  doc.rect(mL,y,cW,18,'FD');
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(...sev.color);
+  doc.text('AUTOMATED SEVERITY ASSESSMENT: ' + sev.level,mL+4,y+7);
+  doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(40,40,40);
+  doc.text(sev.desc,mL+4,y+13);
+  y+=24;
+
+  // Issue details
+  doc.setFillColor(10,22,40); doc.rect(mL,y,cW,8,'F');
+  doc.setTextColor(201,168,76); doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+  doc.text('INCIDENT DETAILS',mL+4,y+5.5); y+=12;
+
+  issues.forEach((inc, idx) => {
+    const incSev = assessSeverity([inc.detail]);
+    // Area header
+    doc.setFillColor(...incSev.bg); doc.setDrawColor(...incSev.color);
+    doc.rect(mL,y,cW,8,'FD');
+    doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(...incSev.color);
+    doc.text(`${idx+1}. ${inc.area}  [${incSev.level}]`,mL+4,y+5.5);
+    doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(90,106,138);
+    doc.text(`Officer: ${inc.officer||'—'}`,W-mR-50,y+5.5);
+    y+=10;
+
+    // Description
+    const dLines = doc.splitTextToSize(inc.detail, cW-8);
+    const dH = dLines.length*4.5+8;
+    doc.setFillColor(250,250,252); doc.setDrawColor(197,207,224);
+    doc.rect(mL,y,cW,dH,'FD');
+    doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(26,37,64);
+    doc.text(dLines,mL+4,y+6);
+    y+=dH+3;
+
+    // Action required box
+    doc.setFillColor(255,248,220); doc.setDrawColor(180,140,0);
+    doc.rect(mL,y,cW,10,'FD');
+    doc.setFontSize(7); doc.setFont('helvetica','bold'); doc.setTextColor(120,80,0);
+    doc.text('ACTION REQUIRED: ',mL+4,y+4.5);
+    doc.setFont('helvetica','normal');
+    const action = incSev.level==='CRITICAL'?'STOP — Escalate immediately to supervisor/management. Do not leave area unattended.':
+                   incSev.level==='HIGH'?'Notify shift supervisor within 15 minutes. Secure area if required.':
+                   incSev.level==='MEDIUM'?'Log in maintenance register. Resolve within current shift.':
+                   'Note in daily log. Schedule routine follow-up.';
+    doc.text(action,mL+38,y+4.5);
+    doc.setFont('helvetica','bold'); doc.setTextColor(120,80,0);
+    doc.text('FOLLOW UP:',mL+4,y+8.5);
+    doc.setFont('helvetica','normal');
+    doc.text('Signature: ___________________________   Time resolved: ____________',mL+28,y+8.5);
+    y+=16;
+  });
+
+  // Photos in incident report too
+  if(attachedPhotos.length > 0) {
+    if(y > 210) { doc.addPage(); y=20; }
+    doc.setFillColor(10,22,40); doc.rect(mL,y,cW,8,'F');
+    doc.setTextColor(201,168,76); doc.setFontSize(7.5); doc.setFont('helvetica','bold');
+    doc.text('PHOTOGRAPHIC EVIDENCE',mL+4,y+5.5); y+=12;
+    const pW=(cW-6)/3, pH=pW*0.75;
+    let px=mL, py=y;
+    attachedPhotos.forEach((ph,i)=>{
+      try {
+        doc.addImage(ph.dataUrl, ph.dataUrl.includes('png')?'PNG':'JPEG', px, py, pW, pH);
+        doc.setFontSize(6); doc.setTextColor(100,100,100);
+        doc.text(ph.name.slice(0,18), px+pW/2, py+pH+3, {align:'center'});
+      } catch(e){}
+      px+=pW+3;
+      if((i+1)%3===0){px=mL;py+=pH+8;}
+    });
+    y=py+pH+14;
+  }
+
+  // Signature block
+  if(y>240){doc.addPage();y=20;}
+  y+=4;
+  doc.setDrawColor(197,207,224); doc.line(mL,y,mL+cW,y); y+=8;
+  doc.setFontSize(8); doc.setFont('helvetica','bold'); doc.setTextColor(26,37,64);
+  doc.text('INCIDENT SIGN-OFF',mL,y); y+=8;
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(60,60,60);
+  doc.text('Reporting Officer: _________________________   Signature: _____________________   Time: _________',mL,y); y+=8;
+  doc.text('Supervisor Notified: _______________________   Signature: _____________________   Time: _________',mL,y); y+=8;
+  doc.text('Action Taken: ________________________________________________________________________________',mL,y);
+
+  // Footer
+  doc.setFillColor(10,22,40); doc.rect(0,284,W,13,'F');
+  doc.setFillColor(...sev.color); doc.rect(0,284,W,1,'F');
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(160,175,200);
+  doc.text('INCIDENT REPORT — For questions contact Ghani Gomuna  |  ggomuna@rangeview.com.pg  |  Rangeview Heights Limited',W/2,291.5,{align:'center'});
+
+  const sd=rDate||now.toISOString().slice(0,10);
+  const st=timeLabel.replace(':','h');
+  doc.save(`RHL-INCIDENT-REPORT_${sd}_${st}.pdf`);
+}
+
+</script>
+</body>
+</html>
