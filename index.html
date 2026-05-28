@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TANO — PNG Land Justice Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b0f;
+  --bg2: #0d1117;
+  --bg3: #111820;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.04);
+  --clay: #c8651a;
+  --clay2: #e07820;
+  --chain: #00d4ff;
+  --chain2: rgba(0,212,255,0.12);
+  --gold: #f0a830;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --text: rgba(255,255,255,0.92);
+  --text2: rgba(255,255,255,0.55);
+  --text3: rgba(255,255,255,0.3);
+  --radius: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:1rem;padding:0 1.5rem;height:56px;background:rgba(8,11,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--clay);flex-shrink:0}
+.nav-logo sup{font-size:0.5rem;letter-spacing:3px;color:var(--chain);vertical-align:super}
+.nav-tabs{display:flex;gap:0.25rem;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{background:none;border:none;color:var(--text2);padding:0.4rem 0.9rem;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:1px;border-radius:4px;white-space:nowrap;transition:all 0.2s}
+.nav-tab:hover{color:var(--text);background:var(--border)}
+.nav-tab.active{color:var(--clay);background:rgba(200,101,26,0.1);border-bottom:2px solid var(--clay)}
+.nav-right{display:flex;align-items:center;gap:0.75rem;flex-shrink:0}
+.ai-dot-wrap{display:flex;align-items:center;gap:0.4rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3)}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.db-status{font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:3px 8px;border-radius:3px;border:1px solid var(--border)}
+.db-ok{color:var(--chain);border-color:rgba(0,212,255,0.2);background:rgba(0,212,255,0.05)}
+.db-err{color:var(--red);border-color:rgba(231,76,60,0.2)}
+
+/* PAGES */
+.page{display:none;padding-top:56px;min-height:100vh}
+.page.active{display:block}
+
+/* HERO */
+.hero{position:relative;min-height:calc(100vh - 56px);display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(200,101,26,0.12) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 20% 80%,rgba(0,212,255,0.06) 0%,transparent 60%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+.hero-orb{position:absolute;top:-10%;right:-5%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(200,101,26,0.08) 0%,transparent 70%);filter:blur(40px)}
+.hero-inner{position:relative;z-index:1;padding:4rem 2rem;max-width:900px;margin:0 auto}
+.h-badge{display:inline-flex;align-items:center;gap:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:1px;color:var(--chain);border:1px solid rgba(0,212,255,0.2);padding:5px 12px;border-radius:20px;background:rgba(0,212,255,0.05);margin-bottom:2rem}
+.ht{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,10vw,7rem);line-height:0.95;letter-spacing:2px;margin-bottom:1.5rem}
+.ht em{display:block;font-family:'DM Serif Display',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-style:italic;color:var(--text2);letter-spacing:0;line-height:1.4;margin-top:0.5rem;font-weight:400}
+.h-sub{font-size:1rem;color:var(--text2);max-width:560px;line-height:1.7;margin-bottom:2.5rem}
+.h-stats{display:flex;gap:2.5rem;flex-wrap:wrap;margin-bottom:2.5rem;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius)}
+.h-stats>div{display:flex;flex-direction:column;gap:0.25rem}
+.sn{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--clay);line-height:1}
+.sl{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:1px;color:var(--text3)}
+.h-acts{display:flex;gap:0.75rem;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:1px;padding:10px 20px;border-radius:4px;transition:all 0.2s;text-transform:uppercase}
+.btn-clay{background:var(--clay);color:white}
+.btn-clay:hover{background:var(--clay2);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
+.btn-chain{background:rgba(0,212,255,0.08);color:var(--chain);border:1px solid rgba(0,212,255,0.2)}
+.btn-chain:hover{background:rgba(0,212,255,0.15)}
+.btn-full{width:100%;justify-content:center;padding:14px}
+.btn-sm{padding:7px 14px;font-size:0.6rem}
+
+/* TICKER */
+.live-ticker{background:rgba(200,101,26,0.08);border-top:1px solid rgba(200,101,26,0.15);border-bottom:1px solid rgba(200,101,26,0.15);padding:10px 2rem;display:flex;align-items:center;gap:1rem;overflow:hidden}
+.ticker-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--clay);flex-shrink:0;animation:pulse 2s infinite}
+.ticker-content{font-size:0.8rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* SEC */
+.sec{padding:3rem 2rem;max-width:1100px;margin:0 auto}
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:2px;color:var(--chain);margin-bottom:0.75rem}
+.sec-title{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3rem);margin-bottom:1rem;line-height:1.1}
+.sec-title em{color:var(--clay);font-style:italic}
+.sec-desc{color:var(--text2);max-width:600px;line-height:1.7;margin-bottom:2rem}
+
+/* FORM ELEMENTS */
+.field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
+.lbl{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:1px;color:var(--text3)}
+.inp,.sel,.ta{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:4px;font-family:'Outfit',sans-serif;font-size:0.9rem;transition:border 0.2s;width:100%}
+.inp:focus,.sel:focus,.ta:focus{outline:none;border-color:rgba(200,101,26,0.4)}
+.sel{cursor:pointer}
+.ta{resize:vertical;min-height:80px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.chk-row{display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.85rem;color:var(--text2)}
+
+/* PETITION */
+.pet-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:2rem;align-items:start}
+@media(max-width:768px){.pet-layout,.row2{grid-template-columns:1fr}}
+.sig-big{font-family:'Bebas Neue',sans-serif;font-size:5rem;color:var(--clay);display:block;line-height:1}
+.sig-goal{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--text3);letter-spacing:1px;margin-bottom:1rem}
+.prog{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-bottom:0.5rem}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--clay),var(--clay2));border-radius:3px;transition:width 1s}
+.prog-meta{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3);margin-bottom:1.5rem}
+.feed{display:flex;flex-direction:column;gap:0.5rem;max-height:300px;overflow-y:auto}
+.feed-item{padding:0.75rem;background:rgba(255,255,255,0.02);border:1px solid var(--border2);border-radius:4px;display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem}
+.feed-name{font-size:0.85rem;font-weight:500}
+.feed-meta{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3)}
+.feed-reason{font-size:0.78rem;color:var(--text2);margin-top:0.25rem;font-style:italic}
+.form-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.form-head{font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:0.25rem}
+.form-sub{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:1.5px;color:var(--chain);margin-bottom:1rem}
+.chain-note{font-size:0.75rem;color:var(--text3);border-left:2px solid rgba(0,212,255,0.3);padding-left:0.75rem;margin-bottom:1.25rem;line-height:1.5}
+
+/* REGISTRY */
+.reg-bar{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.reg-bar .inp,.reg-bar .sel{flex:1;min-width:160px}
+.reg-tbl{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.reg-head{display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:0.75rem 1rem;background:rgba(255,255,255,0.03);font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:1px;color:var(--text3);gap:1rem}
+.reg-row{display:grid;grid-template-columns:2fr 1.5fr 1fr 1fr;padding:1rem;border-top:1px solid var(--border2);gap:1rem;cursor:pointer;transition:background 0.15s;align-items:center}
+.reg-row:hover{background:rgba(255,255,255,0.02)}
+.reg-loc{font-weight:500;font-size:0.9rem}
+.reg-clan{font-size:0.82rem;color:var(--text2)}
+.status-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.58rem;padding:3px 8px;border-radius:3px;letter-spacing:0.5px}
+.status-Disputed{background:rgba(231,76,60,0.12);color:#e74c3c;border:1px solid rgba(231,76,60,0.2)}
+.status-Under-Review{background:rgba(240,168,48,0.12);color:var(--gold);border:1px solid rgba(240,168,48,0.2)}
+.status-Verified-Fraud{background:rgba(231,76,60,0.2);color:#ff6b6b;border:1px solid rgba(231,76,60,0.3)}
+.status-Reclaimed{background:rgba(46,204,113,0.12);color:var(--green);border:1px solid rgba(46,204,113,0.2)}
+.reg-date{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--text3)}
+
+/* DAO */
+.dao-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.dao-st{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
+.dao-sn{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--clay)}
+.dao-sl{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3);letter-spacing:1px}
+.prop-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+.prop-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.prop-title{font-family:'DM Serif Display',serif;font-size:1.1rem}
+.prop-cat{font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:3px 8px;border-radius:3px;background:rgba(200,101,26,0.1);color:var(--clay);border:1px solid rgba(200,101,26,0.2)}
+.prop-desc{font-size:0.85rem;color:var(--text2);line-height:1.6;margin-bottom:1rem}
+.vote-bar{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem}
+.vb-yes,.vb-no{height:8px;border-radius:4px;transition:width 0.5s;min-width:4px}
+.vb-yes{background:var(--green)}
+.vb-no{background:var(--red)}
+.vote-meta{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3);margin-bottom:1rem}
+.vote-btns{display:flex;gap:0.5rem}
+
+/* EVIDENCE */
+.vault-upload{border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:1.5rem}
+.vault-upload:hover{border-color:rgba(200,101,26,0.4);background:rgba(200,101,26,0.04)}
+.vault-icon{font-size:2.5rem;margin-bottom:0.75rem}
+.vault-types{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;margin-top:0.75rem}
+.vtype{font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:3px 8px;border:1px solid var(--border);border-radius:3px;color:var(--text3)}
+.vault-row{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;padding:1rem;border:1px solid var(--border2);border-radius:4px;margin-bottom:0.5rem;align-items:center}
+.vault-hash{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--chain);word-break:break-all}
+.vault-name{font-size:0.85rem;font-weight:500}
+.vault-meta{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text3)}
+.vault-ico{width:36px;height:36px;border-radius:4px;background:rgba(200,101,26,0.1);border:1px solid rgba(200,101,26,0.2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+
+/* AI PANEL */
+.ai-panel{background:rgba(0,0,0,0.3);border:1px solid rgba(0,212,255,0.12);border-radius:var(--radius);overflow:hidden;margin-top:2rem}
+.ai-head{display:flex;align-items:center;gap:0.5rem;padding:0.875rem 1.25rem;border-bottom:1px solid rgba(0,212,255,0.08)}
+.ai-htitle{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:1px;color:var(--chain)}
+.ai-msgs{padding:1.25rem;display:flex;flex-direction:column;gap:0.75rem;max-height:320px;overflow-y:auto;scroll-behavior:smooth}
+.ai-m{display:flex;gap:0.75rem;align-items:flex-start}
+.ai-m.user{flex-direction:row-reverse}
+.ai-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:0.65rem;font-weight:700;flex-shrink:0}
+.ai-av.b{background:rgba(0,212,255,0.15);color:var(--chain);border:1px solid rgba(0,212,255,0.2)}
+.ai-av.u{background:rgba(200,101,26,0.15);color:var(--clay);border:1px solid rgba(200,101,26,0.2)}
+.ai-bub{background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:6px;padding:0.75rem 1rem;font-size:0.85rem;line-height:1.6;color:var(--text2);max-width:85%}
+.ai-m.user .ai-bub{background:rgba(200,101,26,0.08);border-color:rgba(200,101,26,0.15);color:var(--text)}
+.ai-typing{display:none;align-items:center;gap:4px;padding:0.5rem 1rem}
+.ai-typing.show{display:flex}
+.ai-dot-t{width:5px;height:5px;border-radius:50%;background:var(--chain);animation:typing 1.2s infinite}
+.ai-dot-t:nth-child(2){animation-delay:0.2s}
+.ai-dot-t:nth-child(3){animation-delay:0.4s}
+@keyframes typing{0%,100%{opacity:0.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.qps{display:flex;gap:0.35rem;flex-wrap:wrap;padding:0.625rem 1.25rem;border-top:1px solid var(--border2)}
+.qp{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.12);color:var(--chain);padding:5px 10px;border-radius:3px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.6rem;transition:all 0.2s}
+.qp:hover{background:rgba(0,212,255,0.12)}
+.ai-ir{display:flex;border-top:1px solid var(--border2)}
+.ai-inp{flex:1;background:none;border:none;color:var(--text);padding:0.875rem 1.25rem;font-family:'Outfit',sans-serif;font-size:0.85rem}
+.ai-inp:focus{outline:none}
+.ai-inp::placeholder{color:var(--text3)}
+.ai-send{background:rgba(0,212,255,0.09);border:none;border-left:1px solid rgba(0,212,255,0.12);color:var(--chain);padding:0 1rem;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:0.62rem;transition:0.2s}
+.ai-send:hover{background:rgba(0,212,255,0.16)}
+.ai-send:disabled{opacity:0.35;cursor:not-allowed}
+
+/* MODALS */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.ov.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative}
+.mc{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text3);font-size:1.1rem;cursor:pointer;line-height:1}
+.m-title{font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:0.25rem}
+.m-sub{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:1.5px;color:var(--chain);margin-bottom:1.25rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:0.875rem 1.25rem;font-size:0.85rem;z-index:300;transform:translateY(100px);opacity:0;transition:all 0.3s;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{border-color:rgba(46,204,113,0.3);color:var(--green)}
+.toast.err{border-color:rgba(231,76,60,0.3);color:var(--red)}
+
+/* EMPTY */
+.empty{text-align:center;padding:3rem;color:var(--text3)}
+.empty-ic{font-size:2rem;margin-bottom:0.5rem;opacity:0.3}
+.empty-tx{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:1px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-top:2rem}
+.fl{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--clay);letter-spacing:2px}
+.fc{font-size:0.75rem;color:var(--text3)}
+.fch{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--chain)}
+
+/* CASE DETAIL */
+.case-detail-title{font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:0.5rem}
+.case-detail-field{margin-bottom:0.875rem}
+.case-detail-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:1px;color:var(--text3);margin-bottom:0.25rem}
+.case-detail-val{font-size:0.9rem;color:var(--text);line-height:1.6}
+
+/* TERMS */
+.terms-box{background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);border-radius:4px;padding:1rem 1.25rem;margin-bottom:1rem;font-size:0.78rem;color:var(--text2);line-height:1.6}
+.terms-box strong{color:var(--chain);display:block;font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:1px;margin-bottom:0.4rem}
+.terms-chk{display:flex;align-items:flex-start;gap:0.5rem;cursor:pointer;font-size:0.8rem;color:var(--text2);margin-bottom:1rem}
+.terms-chk input{margin-top:3px;flex-shrink:0}
+
+/* AUDIT */
+.audit-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.75rem;padding:0.75rem 1rem;border-top:1px solid var(--border2);font-size:0.78rem;align-items:center}
+.audit-head{background:rgba(255,255,255,0.03);font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:1px;color:var(--text3)}
+.audit-tag{font-family:'JetBrains Mono',monospace;font-size:0.6rem;padding:2px 6px;border-radius:2px;background:rgba(0,212,255,0.08);color:var(--chain);border:1px solid rgba(0,212,255,0.15)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">TANO<sup>ETAG</sup></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-page="home">Home</button>
+    <button class="nav-tab" data-page="petition">✊ Petition</button>
+    <button class="nav-tab" data-page="registry">📋 Registry</button>
+    <button class="nav-tab" data-page="dao">⚖️ Governance</button>
+    <button class="nav-tab" data-page="evidence">🔒 Evidence</button>
+    <button class="nav-tab" data-page="audit">📊 Audit Log</button>
+  </div>
+  <div class="nav-right">
+    <div class="ai-dot-wrap"><div class="ai-dot"></div>AI Online</div>
+    <div class="db-status db-ok" id="db-status">⬡ Live · Shared</div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-inner">
+      <div class="h-badge">⬡ Shared Live Database · Central Province, PNG · All entries visible to everyone</div>
+      <h1 class="ht">TANO<em>Eda Tano Aita Goadalaia — Our Land Has A Voice.</em></h1>
+      <p class="h-sub">Verified petitions, land fraud registry, community governance, and a court-admissible evidence vault — with AI analysis built in. Every entry shared in real time across all devices.</p>
+      <div class="h-stats">
+        <div><span class="sn" id="h-sigs">—</span><span class="sl">Signatures</span></div>
+        <div><span class="sn" id="h-cases">—</span><span class="sl">Cases Filed</span></div>
+        <div><span class="sn" id="h-votes">—</span><span class="sl">Votes Cast</span></div>
+        <div><span class="sn" id="h-docs">—</span><span class="sl">Documents</span></div>
+      </div>
+      <div class="h-acts">
+        <button class="btn btn-clay" onclick="gotoPage('petition')">Sign the Petition</button>
+        <button class="btn btn-outline" onclick="gotoPage('registry')">View Land Registry</button>
+        <button class="btn btn-chain" onclick="gotoPage('dao')">Join Governance DAO</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="live-ticker">
+    <span class="ticker-label">⬡ LIVE</span>
+    <span class="ticker-content" id="ticker-text">⬡ TANO is live — be the first to sign the petition and record Rigo's voice</span>
+  </div>
+
+  <div style="padding:0 2rem 4rem;max-width:1100px;margin:0 auto;">
+    <div class="sec-label">AI Land Justice Assistant</div>
+    <h2 class="sec-title">Ask TANO <em>anything</em></h2>
+    <p class="sec-desc">TANO AI is trained on PNG land law, the Customary Land Tenure Act 2026, ILG registration, DDA accountability, and Central Province governance. Every question helps the movement grow.</p>
+    <div class="ai-panel">
+      <div class="ai-head"><div class="ai-dot"></div><div class="ai-htitle">TANO AI — Land Justice Assistant</div></div>
+      <div class="ai-msgs" id="ai-msgs-home">
+        <div class="ai-m"><div class="ai-av b">T</div><div class="ai-bub">Good day. I am TANO's AI assistant — here to help with PNG land law, the Customary Land Tenure Act 2026, ILG registration, DDA accountability, and Central Province governance. Ask me anything. Every question you ask helps the movement grow.</div></div>
+      </div>
+      <div class="ai-typing" id="typing-home"><div class="ai-dot-t"></div><div class="ai-dot-t"></div><div class="ai-dot-t"></div></div>
+      <div class="qps">
+        <button class="qp" onclick="askAI('home','Land sold without my consent — what are my rights?')">Land sold without consent</button>
+        <button class="qp" onclick="askAI('home','How do I register an ILG step by step?')">How to register an ILG</button>
+        <button class="qp" onclick="askAI('home','Explain the Customary Land Tenure Act 2026')">CLA 2026 explained</button>
+        <button class="qp" onclick="askAI('home','How do I hold the DDA accountable for DSIP funds?')">DDA accountability</button>
+      </div>
+      <div class="ai-ir">
+        <input class="ai-inp" id="ai-in-home" placeholder="Ask about land law, ILGs, DDA accountability..." onkeydown="if(event.key==='Enter')askAI('home',this.value)">
+        <button class="ai-send" onclick="askAI('home',document.getElementById('ai-in-home').value)">SEND →</button>
+      </div>
+    </div>
+  </div>
+  <footer><div class="fl">TANO</div><div class="fc">© 2026 TANO · Eda Tano Aita Goadalaia · Central Province, PNG · RFi + Rigo Garona</div><div class="fch">⬡ Live · Real-time · Shared</div></footer>
+</div>
+
+<!-- PETITION -->
+<div class="page" id="page-petition">
+  <div class="sec">
+    <div class="sec-label">Module 01</div>
+    <h2 class="sec-title">Sign the <em>Petition</em></h2>
+    <p class="sec-desc">Every signature is stored in a shared database — visible to everyone, everywhere, in real time. Cannot be deleted. Cannot be suppressed.</p>
+    <div class="pet-layout">
+      <div>
+        <span class="sig-big" id="sig-count">—</span>
+        <div class="sig-goal">Verified Signatures — Goal: 1,000</div>
+        <div class="prog"><div class="prog-fill" id="sig-bar" style="width:0%"></div></div>
+        <div class="prog-meta"><span id="sig-pct">Loading...</span><span>1,000 target</span></div>
+        <div class="feed" id="signer-feed"><div class="empty"><div class="empty-ic">⬡</div><div class="empty-tx">Loading signatures...</div></div></div>
+      </div>
+      <div class="form-card">
+        <div class="form-head">Add Your Signature</div>
+        <div class="form-sub">⬡ SHARED DATABASE · REAL-TIME · PERMANENT</div>
+        <div class="chain-note">⬡ Your signature is stored in a shared live database. It appears on everyone's screen immediately and cannot be removed.</div>
+        <div class="field"><label class="lbl">Full Name *</label><input class="inp" id="p-name" placeholder="Your full name"></div>
+        <div class="row2">
+          <div class="field"><label class="lbl">District</label>
+            <select class="sel" id="p-district">
+              <option value="">Select district</option>
+              <option>Abau District</option><option>Rigo District</option>
+              <option>Hiri-Koiari District</option><option>Kairuku District</option>
+              <option>Goilala District</option><option>NCD / Port Moresby</option>
+              <option>Other PNG Province</option><option>Outside PNG</option>
+            </select>
+          </div>
+          <div class="field"><label class="lbl">Clan / Village</label><input class="inp" id="p-clan" placeholder="Optional"></div>
+        </div>
+        <div class="field"><label class="lbl">Your Reason (Optional)</label><textarea class="ta" id="p-reason" placeholder="Why are you signing?"></textarea></div>
+        <div class="terms-box"><strong>⬡ LEGAL DECLARATION</strong>By signing, you confirm this information is true and accurate to the best of your knowledge. False statements may constitute an offence under the Cybercrime Code Act 2016 (PNG). TANO reserves the right to remove any submission found to be false, defamatory, or in breach of PNG law.</div>
+        <div class="field"><label class="chk-row"><input type="checkbox" id="p-anon"><span>Sign anonymously — counted but name hidden</span></label></div>
+        <button class="btn btn-clay btn-full" id="sign-btn" onclick="submitSignature()">✊ Sign &amp; Record — Visible to All</button>
+      </div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:.625rem;flex-wrap:wrap;">
+      <button class="btn btn-outline btn-sm" onclick="exportCSV('signatures')">↓ Export CSV</button>
+    </div>
+    <div class="ai-panel">
+      <div class="ai-head"><div class="ai-dot"></div><div class="ai-htitle">Petition Intelligence</div></div>
+      <div class="ai-msgs" id="ai-msgs-petition">
+        <div class="ai-m"><div class="ai-av b">T</div><div class="ai-bub">I can help you draft a personal statement, understand the petition's legal weight under PNG law, or explain how to formally submit it to Parliament or the Land Commission.</div></div>
+      </div>
+      <div class="ai-typing" id="typing-petition"><div class="ai-dot-t"></div><div class="ai-dot-t"></div><div class="ai-dot-t"></div></div>
+      <div class="qps">
+        <button class="qp" onclick="askAI('petition','Help me draft a personal statement for the petition')">Draft my statement</button>
+        <button class="qp" onclick="askAI('petition','How do we formally submit this petition to Parliament?')">Submit to government</button>
+        <button class="qp" onclick="askAI('petition','What is the legal weight of a community petition under PNG law?')">Legal weight</button>
+      </div>
+      <div class="ai-ir">
+        <input class="ai-inp" id="ai-in-petition" placeholder="Ask about the petition..." onkeydown="if(event.key==='Enter')askAI('petition',this.value)">
+        <button class="ai-send" onclick="askAI('petition',document.getElementById('ai-in-petition').value)">SEND →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTRY -->
+<div class="page" id="page-registry">
+  <div class="sec">
+    <div class="sec-label">Module 02</div>
+    <h2 class="sec-title">Land Fraud <em>Registry</em></h2>
+    <p class="sec-desc">Every case filed is shared instantly across all devices. File Mamalo limestone, Launakalana boundary disputes, Rigo Rice SABL — any land fraud you know about.</p>
+    <div class="reg-bar">
+      <input class="inp" id="reg-search" placeholder="Search location, clan, district..." oninput="filterRegistry()">
+      <select class="sel" id="reg-filter" onchange="filterRegistry()">
+        <option value="">All Status</option>
+        <option value="Disputed">Disputed</option>
+        <option value="Under Review">Under Review</option>
+        <option value="Verified Fraud">Verified Fraud</option>
+        <option value="Reclaimed">Reclaimed</option>
+      </select>
+      <button class="btn btn-clay btn-sm" onclick="document.getElementById('m-case').classList.add('show')">+ File New Case</button>
+      <button class="btn btn-outline btn-sm" onclick="loadRegistry()">↻ Refresh</button>
+      <button class="btn btn-outline btn-sm" onclick="exportCSV('registry')">↓ Export CSV</button>
+    </div>
+    <div class="reg-tbl">
+      <div class="reg-head"><span>Location</span><span>Clan / Community</span><span>Status</span><span>Filed</span></div>
+      <div id="reg-body"><div class="empty"><div class="empty-ic">⬡</div><div class="empty-tx">Loading registry...</div></div></div>
+    </div>
+    <div class="ai-panel" style="margin-top:2.5rem;">
+      <div class="ai-head"><div class="ai-dot"></div><div class="ai-htitle">Registry Intelligence</div></div>
+      <div class="ai-msgs" id="ai-msgs-registry">
+        <div class="ai-m"><div class="ai-av b">T</div><div class="ai-bub">I can analyse land cases, explain SABL legal challenges, advise on what evidence makes a strong case, and help you prepare a Commission of Inquiry submission.</div></div>
+      </div>
+      <div class="ai-typing" id="typing-registry"><div class="ai-dot-t"></div><div class="ai-dot-t"></div><div class="ai-dot-t"></div></div>
+      <div class="qps">
+        <button class="qp" onclick="askAI('registry','Explain SABL legal challenges in PNG')">SABL challenges</button>
+        <button class="qp" onclick="askAI('registry','What are the FPIC requirements for the Mamalo limestone project?')">FPIC and Mamalo</button>
+        <button class="qp" onclick="askAI('registry','What evidence do I need to prove a land sale was invalid?')">Prove invalid sale</button>
+      </div>
+      <div class="ai-ir">
+        <input class="ai-inp" id="ai-in-registry" placeholder="Describe a case or ask about land law..." onkeydown="if(event.key==='Enter')askAI('registry',this.value)">
+        <button class="ai-send" onclick="askAI('registry',document.getElementById('ai-in-registry').value)">SEND →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAO -->
+<div class="page" id="page-dao">
+  <div class="sec">
+    <div class="sec-label">Module 03</div>
+    <h2 class="sec-title">Community <em>Governance DAO</em></h2>
+    <p class="sec-desc">Submit proposals and vote on movement decisions. All votes are shared in real time. Every person's vote counts equally.</p>
+    <div class="dao-stats">
+      <div class="dao-st"><div class="dao-sn" id="dao-active">—</div><div class="dao-sl">Active Proposals</div></div>
+      <div class="dao-st"><div class="dao-sn" id="dao-tvotes">—</div><div class="dao-sl">Total Votes</div></div>
+      <div class="dao-st"><div class="dao-sn" id="dao-passed">—</div><div class="dao-sl">Passed</div></div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <button class="btn btn-clay btn-sm" onclick="document.getElementById('m-proposal').classList.add('show')">+ Submit Proposal</button>
+      <button class="btn btn-outline btn-sm" onclick="loadDAO()">↻ Refresh</button>
+      <button class="btn btn-outline btn-sm" onclick="exportCSV('dao')">↓ Export CSV</button>
+    </div>
+    <div id="dao-body"><div class="empty"><div class="empty-ic">⬡</div><div class="empty-tx">Loading proposals...</div></div></div>
+    <div class="ai-panel" style="margin-top:2.5rem;">
+      <div class="ai-head"><div class="ai-dot"></div><div class="ai-htitle">Governance Intelligence</div></div>
+      <div class="ai-msgs" id="ai-msgs-dao">
+        <div class="ai-m"><div class="ai-av b">T</div><div class="ai-bub">I can help draft proposals, advise on strategy, or explain which actions will have the most legal and political impact for Central Province land justice and Rigo District governance.</div></div>
+      </div>
+      <div class="ai-typing" id="typing-dao"><div class="ai-dot-t"></div><div class="ai-dot-t"></div><div class="ai-dot-t"></div></div>
+      <div class="qps">
+        <button class="qp" onclick="askAI('dao','Help me draft a DDA accountability proposal for community vote')">Draft DDA proposal</button>
+        <button class="qp" onclick="askAI('dao','What is the most impactful next step for Rigo land justice?')">Strategic next step</button>
+        <button class="qp" onclick="askAI('dao','How do we engage the Electoral Commission on common roll verification?')">Electoral Commission</button>
+      </div>
+      <div class="ai-ir">
+        <input class="ai-inp" id="ai-in-dao" placeholder="Ask about governance strategy..." onkeydown="if(event.key==='Enter')askAI('dao',this.value)">
+        <button class="ai-send" onclick="askAI('dao',document.getElementById('ai-in-dao').value)">SEND →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVIDENCE -->
+<div class="page" id="page-evidence">
+  <div class="sec">
+    <div class="sec-label">Module 04</div>
+    <h2 class="sec-title">Evidence <em>Vault</em></h2>
+    <p class="sec-desc">Upload documents, photos, audio, testimony. Each file is SHA-256 fingerprinted and its record shared across all devices permanently. Court-admissible.</p>
+    <div class="vault-upload" onclick="document.getElementById('vault-file').click()">
+      <div class="vault-icon">🔒</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text2);margin-bottom:0.5rem">Upload Evidence Document</div>
+      <div style="font-size:0.8rem;color:var(--text3)">Tap to select. All types accepted. File fingerprinted and stored permanently.</div>
+      <div class="vault-types">
+        <span class="vtype">PDF</span><span class="vtype">JPG/PNG</span><span class="vtype">DOC/DOCX</span><span class="vtype">MP3/MP4</span><span class="vtype">ANY FILE</span>
+      </div>
+    </div>
+    <input type="file" id="vault-file" style="display:none" onchange="handleFileSelect(this)">
+    <div id="vault-form" style="display:none;margin-bottom:1.5rem;">
+      <div class="form-card">
+        <div class="form-head" id="vault-fname">📎 File selected</div>
+        <div class="field"><label class="lbl">Document Type *</label>
+          <select class="sel" id="v-type">
+            <option value="">Select type</option>
+            <option>Title Deed / Lease Document</option><option>Photographic Evidence</option>
+            <option>Written Testimony</option><option>Audio/Video Testimony</option>
+            <option>Official Correspondence</option><option>Court Document</option>
+            <option>Survey / Map</option><option>Financial Record</option><option>Other Evidence</option>
+          </select>
+        </div>
+        <div class="field"><label class="lbl">Related Case / Location</label><input class="inp" id="v-case" placeholder="e.g. Mamalo Limestone, Launakalana, RDDA funds"></div>
+        <div class="field"><label class="lbl">Description *</label><textarea class="ta" id="v-desc" placeholder="Describe what this document shows and why it is significant"></textarea></div>
+        <div class="field"><label class="lbl">Submitted By</label><input class="inp" id="v-author" placeholder="Your name or Anonymous"></div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button class="btn btn-clay" onclick="submitEvidence()">🔒 Hash &amp; Store — Shared Permanently</button>
+          <button class="btn btn-outline" onclick="document.getElementById('vault-form').style.display='none'">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div id="vault-body"><div class="empty"><div class="empty-ic">⬡</div><div class="empty-tx">Loading vault...</div></div></div>
+    <div style="margin-top:1rem;">
+      <button class="btn btn-outline btn-sm" onclick="exportCSV('evidence')">↓ Export Vault Index CSV</button>
+    </div>
+    <div class="ai-panel" style="margin-top:2.5rem;">
+      <div class="ai-head"><div class="ai-dot"></div><div class="ai-htitle">Evidence Intelligence</div></div>
+      <div class="ai-msgs" id="ai-msgs-evidence">
+        <div class="ai-m"><div class="ai-av b">T</div><div class="ai-bub">I can help you understand what makes strong evidence in PNG courts, how to organise documents for a Commission of Inquiry submission, and what a judge or commission needs to see.</div></div>
+      </div>
+      <div class="ai-typing" id="typing-evidence"><div class="ai-dot-t"></div><div class="ai-dot-t"></div><div class="ai-dot-t"></div></div>
+      <div class="qps">
+        <button class="qp" onclick="askAI('evidence','What types of evidence are strongest in PNG land courts?')">Best evidence types</button>
+        <button class="qp" onclick="askAI('evidence','How do I document elder oral testimony for court use?')">Elder testimony</button>
+        <button class="qp" onclick="askAI('evidence','Explain chain of custody for evidence in PNG')">Chain of custody</button>
+      </div>
+      <div class="ai-ir">
+        <input class="ai-inp" id="ai-in-evidence" placeholder="Ask about evidence law..." onkeydown="if(event.key==='Enter')askAI('evidence',this.value)">
+        <button class="ai-send" onclick="askAI('evidence',document.getElementById('ai-in-evidence').value)">SEND →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="ov" id="m-case">
+  <div class="modal">
+    <button class="mc" onclick="document.getElementById('m-case').classList.remove('show')">✕</button>
+    <div class="m-title">File a Land Case</div>
+    <div class="m-sub">STORED IN SHARED DATABASE · VISIBLE TO ALL · PERMANENT</div>
+    <div class="field"><label class="lbl">Location / Land Description *</label><input class="inp" id="rc-loc" placeholder="e.g. Mamalo Village, Rigo Coastal Rural LLG"></div>
+    <div class="field"><label class="lbl">District *</label>
+      <select class="sel" id="rc-dist">
+        <option value="">Select</option>
+        <option>Abau District</option><option>Rigo District</option>
+        <option>Hiri-Koiari District</option><option>Kairuku District</option>
+        <option>Goilala District</option><option>NCD / Port Moresby</option>
+      </select>
+    </div>
+    <div class="field"><label class="lbl">Lease / Project Reference</label><input class="inp" id="rc-lease" placeholder="e.g. EL 1234, ML 5678, SABL reference"></div>
+    <div class="field"><label class="lbl">Affected Clan / Community *</label><input class="inp" id="rc-clan" placeholder="Clan or community name"></div>
+    <div class="field"><label class="lbl">Description of Issue *</label><textarea class="ta" id="rc-desc" placeholder="Describe the land dispute, fraud, or issue in detail"></textarea></div>
+    <div class="field"><label class="lbl">Status</label>
+      <select class="sel" id="rc-status">
+        <option value="Disputed">Disputed — Transaction contested</option>
+        <option value="Under Review">Under Review — Investigation requested</option>
+        <option value="Verified Fraud">Verified Fraud — Evidence of illegal dealing</option>
+      </select>
+    </div>
+    <div class="field"><label class="lbl">Submitted By (Optional)</label><input class="inp" id="rc-auth" placeholder="Your name or Anonymous"></div>
+    <div class="terms-box"><strong>⬡ LEGAL DECLARATION</strong>By filing this case, you confirm all information is true and accurate to the best of your knowledge. False or defamatory submissions may constitute an offence under Section 27 of the Cybercrime Code Act 2016 (PNG). TANO reserves the right to remove submissions found to be in breach of PNG law.</div>
+    <button class="btn btn-clay btn-full" id="rc-btn" onclick="submitCase()">📋 File Case — Visible to All Immediately</button>
+  </div>
+</div>
+
+<div class="ov" id="m-proposal">
+  <div class="modal">
+    <button class="mc" onclick="document.getElementById('m-proposal').classList.remove('show')">✕</button>
+    <div class="m-title">Submit a Proposal</div>
+    <div class="m-sub">COMMUNITY VOTE · REAL-TIME · SHARED DATABASE</div>
+    <div class="field"><label class="lbl">Proposal Title *</label><input class="inp" id="pr-title" placeholder="Brief, clear title"></div>
+    <div class="field"><label class="lbl">Description *</label><textarea class="ta" id="pr-desc" placeholder="What action should the movement take, and why?" style="min-height:110px;"></textarea></div>
+    <div class="row2">
+      <div class="field"><label class="lbl">Category</label>
+        <select class="sel" id="pr-cat">
+          <option>Legal Action</option><option>Media Campaign</option>
+          <option>Community Organizing</option><option>Government Engagement</option>
+          <option>DDA Accountability</option><option>ILG Registration Drive</option>
+          <option>Land Justice</option><option>Other</option>
+        </select>
+      </div>
+      <div class="field"><label class="lbl">Voting Duration</label>
+        <select class="sel" id="pr-dur">
+          <option value="3">3 days</option><option value="7" selected>7 days</option>
+          <option value="14">14 days</option><option value="30">30 days</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label class="lbl">Submitted By *</label><input class="inp" id="pr-auth" placeholder="Your name or community group"></div>
+    <div class="terms-box"><strong>⬡ LEGAL DECLARATION</strong>By submitting this proposal, you confirm it is made in good faith for the benefit of the Rigo community. TANO reserves the right to remove submissions found to be in breach of PNG law.</div>
+    <button class="btn btn-clay btn-full" id="pr-btn" onclick="submitProposal()">⚖️ Submit for Community Vote</button>
+  </div>
+</div>
+
+<div class="ov" id="m-case-det">
+  <div class="modal" style="max-width:600px;">
+    <button class="mc" onclick="document.getElementById('m-case-det').classList.remove('show')">✕</button>
+    <div id="case-det-content"></div>
+  </div>
+</div>
+
+<!-- AUDIT LOG PAGE -->
+<div class="page" id="page-audit">
+  <div class="sec">
+    <div class="sec-label">Administrator Access</div>
+    <h2 class="sec-title">Download <em>Audit Log</em></h2>
+    <p class="sec-desc">Every data export and download from TANO is recorded here — timestamp, module, IP address, and browser fingerprint. This log cannot be edited or deleted.</p>
+    <div style="display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <button class="btn btn-clay btn-sm" onclick="loadAudit()">↻ Refresh Log</button>
+      <button class="btn btn-outline btn-sm" onclick="exportAuditCSV()">↓ Export Audit CSV</button>
+    </div>
+    <div class="reg-tbl">
+      <div class="audit-row audit-head"><span>Timestamp</span><span>Action</span><span>Module</span><span>Fingerprint</span></div>
+      <div id="audit-body"><div class="empty"><div class="empty-ic">📊</div><div class="empty-tx">No audit entries yet</div></div></div>
+    </div>
+
+    <div style="margin-top:2.5rem;">
+      <div class="sec-label">Platform Statistics</div>
+      <div class="dao-stats" style="margin-top:1rem;">
+        <div class="dao-st"><div class="dao-sn" id="audit-downloads">—</div><div class="dao-sl">Total Downloads</div></div>
+        <div class="dao-st"><div class="dao-sn" id="audit-unique">—</div><div class="dao-sl">Unique Sessions</div></div>
+        <div class="dao-st"><div class="dao-sn" id="audit-today">—</div><div class="dao-sl">Activity Today</div></div>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem;padding:1.5rem;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius);">
+      <div class="sec-label">Legal Notices &amp; Platform Policy</div>
+      <div style="margin-top:1rem;font-size:0.85rem;color:var(--text2);line-height:1.8;">
+        <p><strong style="color:var(--text)">Operator:</strong> Rigo Think Tank — Rigo Foundation Incorporated (RFi). RTT Governance Officer: Ghani Gomuna.</p>
+        <p style="margin-top:0.5rem;"><strong style="color:var(--text)">Purpose:</strong> TANO is a civic accountability platform for community documentation, land justice, and governance transparency in Central Province, PNG. Operated under the mandate of RFi as a registered community organisation.</p>
+        <p style="margin-top:0.5rem;"><strong style="color:var(--text)">Legal Basis:</strong> Section 51 of the PNG Constitution (right of access to official information). Associations Incorporation Act (RFi registration). Customary Land Tenure Act 2026.</p>
+        <p style="margin-top:0.5rem;"><strong style="color:var(--text)">Moderation Policy:</strong> TANO reserves the right to remove any submission found to be false, defamatory, or in breach of PNG law including the Cybercrime Code Act 2016. All submitters declare their information is true and accurate at point of submission.</p>
+        <p style="margin-top:0.5rem;"><strong style="color:var(--text)">Data:</strong> All submissions are stored in a shared Supabase database. No personally sensitive data is collected beyond name and district. No data is sold or shared with third parties. Download activity is logged for accountability purposes.</p>
+        <p style="margin-top:0.5rem;"><strong style="color:var(--text)">Legal Review:</strong> Platform reviewed by Emmanuel Kila, Governance &amp; Law Specialist, RTT Sector Specialist Register. June 2026.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-msg"></span></div>
+
+<script>
+// ============================================================
+// CONFIGURATION — update these when you have Supabase details
+// ============================================================
+const SUPABASE_URL = 'https://cfspgolmmnxmigaygisj.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmc3Bnb2xtbW54bWlnYXlnaXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxODUsImV4cCI6MjA5NDE1MTE4NX0.SzyunQ90l41GzVp_BSB3wSXfOti4FuacKexhmv3ktLs';
+
+// In-memory store (used when Supabase is not configured or offline)
+const store = {
+  signatures: JSON.parse(localStorage.getItem('tano_signatures') || '[]'),
+  registry:   JSON.parse(localStorage.getItem('tano_registry')   || '[]'),
+  dao:        JSON.parse(localStorage.getItem('tano_dao')        || '[]'),
+  evidence:   JSON.parse(localStorage.getItem('tano_evidence')   || '[]'),
+};
+function saveStore() {
+  for (const k of Object.keys(store)) {
+    try { localStorage.setItem('tano_' + k, JSON.stringify(store[k])); } catch(e){}
+  }
+}
+
+// Check if Supabase is configured
+const SUPABASE_READY = SUPABASE_URL.indexOf('YOUR_PROJECT') === -1;
+
+// ============================================================
+// SUPABASE HELPERS
+// ============================================================
+async function sbFetch(path, options = {}) {
+  if (!SUPABASE_READY) return null;
+  const r = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation',
+      ...options.headers
+    },
+    ...options
+  });
+  if (!r.ok) return null;
+  return r.json();
+}
+
+async function sbInsert(table, data) {
+  return sbFetch(table, { method: 'POST', body: JSON.stringify(data) });
+}
+
+async function sbSelect(table, query = '') {
+  return sbFetch(table + '?order=created_at.desc' + (query ? '&' + query : ''));
+}
+
+async function sbRpc(fn, params) {
+  if (!SUPABASE_READY) return null;
+  const r = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(params)
+  });
+  if (!r.ok) return null;
+  return r.json();
+}
+
+// ============================================================
+// NAV
+// ============================================================
+function gotoPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelector('[data-page="' + id + '"]').classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'petition') loadPetition();
+  if (id === 'registry') loadRegistry();
+  if (id === 'dao') loadDAO();
+  if (id === 'evidence') loadEvidence();
+  if (id === 'audit') loadAudit();
+}
+document.querySelectorAll('.nav-tab').forEach(t => {
+  t.addEventListener('click', () => {
+    gotoPage(t.dataset.page);
+    logAudit('VIEW', t.dataset.page.toUpperCase(), 'Page visited');
+  });
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, type = 'ok') {
+  const toast = document.getElementById('toast');
+  const msgEl = document.getElementById('toast-msg');
+  toast.className = 'toast ' + type;
+  msgEl.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// ============================================================
+// DATE HELPER
+// ============================================================
+function fmtDate(d) {
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-PG', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function nowISO() { return new Date().toISOString(); }
+
+// ============================================================
+// PETITION
+// ============================================================
+async function loadPetition() {
+  let sigs = [];
+  if (SUPABASE_READY) {
+    const data = await sbSelect('signatures');
+    if (data) sigs = data;
+    else sigs = store.signatures;
+  } else {
+    sigs = store.signatures;
+  }
+  renderPetition(sigs);
+}
+
+function renderPetition(sigs) {
+  const count = sigs.length;
+  document.getElementById('sig-count').textContent = count;
+  document.getElementById('h-sigs').textContent = count;
+  const pct = Math.min(100, (count / 1000) * 100);
+  document.getElementById('sig-bar').style.width = pct + '%';
+  document.getElementById('sig-pct').textContent = pct.toFixed(1) + '%';
+  const feed = document.getElementById('signer-feed');
+  if (!count) {
+    feed.innerHTML = '<div class="empty"><div class="empty-ic">✊</div><div class="empty-tx">Be the first to sign</div></div>';
+    return;
+  }
+  feed.innerHTML = sigs.slice(0, 30).map(s => `
+    <div class="feed-item">
+      <div>
+        <div class="feed-name">${s.anonymous ? 'Anonymous' : escHtml(s.name)}</div>
+        ${s.district ? `<div class="feed-meta">${escHtml(s.district)}${s.clan ? ' · ' + escHtml(s.clan) : ''}</div>` : ''}
+        ${s.reason ? `<div class="feed-reason">"${escHtml(s.reason)}"</div>` : ''}
+      </div>
+      <div class="feed-meta">${fmtDate(s.created_at || s.ts)}</div>
+    </div>
+  `).join('');
+  // Update ticker
+  const latest = sigs[0];
+  if (latest) {
+    const name = latest.anonymous ? 'Anonymous' : (latest.name || 'Someone');
+    document.getElementById('ticker-text').textContent = `⬡ ${name} just signed · ${count} total signatures · Goal: 1,000`;
+  }
+}
+
+async function submitSignature() {
+  const name = document.getElementById('p-name').value.trim();
+  const anon = document.getElementById('p-anon').checked;
+  if (!name && !anon) { showToast('Please enter your name or sign anonymously', 'err'); return; }
+  const btn = document.getElementById('sign-btn');
+  btn.disabled = true; btn.textContent = 'Recording...';
+  const record = {
+    name: name || 'Anonymous',
+    district: document.getElementById('p-district').value,
+    clan: document.getElementById('p-clan').value.trim(),
+    reason: document.getElementById('p-reason').value.trim(),
+    anonymous: anon,
+    created_at: nowISO(),
+    ts: nowISO()
+  };
+  if (SUPABASE_READY) {
+    const r = await sbInsert('signatures', record);
+    if (!r) { store.signatures.unshift(record); saveStore(); }
+  } else {
+    store.signatures.unshift(record); saveStore();
+  }
+  showToast('✊ Signature recorded — visible to all immediately');
+  logAudit('SUBMIT', 'PETITION', 'Signature added: ' + (record.anonymous ? 'Anonymous' : record.name));
+  document.getElementById('p-name').value = '';
+  document.getElementById('p-reason').value = '';
+  document.getElementById('p-clan').value = '';
+  document.getElementById('p-district').value = '';
+  document.getElementById('p-anon').checked = false;
+  btn.disabled = false; btn.textContent = '✊ Sign & Record — Visible to All';
+  await loadPetition();
+}
+
+// ============================================================
+// REGISTRY
+// ============================================================
+let allCases = [];
+async function loadRegistry() {
+  if (SUPABASE_READY) {
+    const data = await sbSelect('registry');
+    allCases = data || store.registry;
+  } else {
+    allCases = store.registry;
+  }
+  document.getElementById('h-cases').textContent = allCases.length;
+  renderRegistry(allCases);
+}
+
+function filterRegistry() {
+  const q = document.getElementById('reg-search').value.toLowerCase();
+  const f = document.getElementById('reg-filter').value;
+  const filtered = allCases.filter(c =>
+    (!q || [c.location,c.clan,c.district,c.description].join(' ').toLowerCase().includes(q)) &&
+    (!f || c.status === f)
+  );
+  renderRegistry(filtered);
+}
+
+function renderRegistry(cases) {
+  const body = document.getElementById('reg-body');
+  if (!cases.length) {
+    body.innerHTML = '<div class="empty"><div class="empty-ic">📋</div><div class="empty-tx">No cases filed yet — be the first</div></div>';
+    return;
+  }
+  body.innerHTML = cases.map((c,i) => {
+    const statusKey = (c.status || 'Disputed').replace(/\s+/g,'-');
+    return `<div class="reg-row" onclick="showCase(${i})">
+      <div><div class="reg-loc">${escHtml(c.location||'')}</div><div class="reg-clan">${escHtml(c.district||'')}</div></div>
+      <div class="reg-clan">${escHtml(c.clan||'')}</div>
+      <div><span class="status-badge status-${statusKey}">${escHtml(c.status||'Disputed')}</span></div>
+      <div class="reg-date">${fmtDate(c.created_at||c.ts||new Date())}</div>
+    </div>`;
+  }).join('');
+}
+
+function showCase(i) {
+  const c = allCases[i];
+  if (!c) return;
+  const statusKey = (c.status || 'Disputed').replace(/\s+/g,'-');
+  document.getElementById('case-det-content').innerHTML = `
+    <div class="case-detail-title">${escHtml(c.location||'')}</div>
+    <span class="status-badge status-${statusKey}">${escHtml(c.status||'Disputed')}</span>
+    <br><br>
+    <div class="case-detail-field"><div class="case-detail-label">District</div><div class="case-detail-val">${escHtml(c.district||'—')}</div></div>
+    <div class="case-detail-field"><div class="case-detail-label">Clan / Community</div><div class="case-detail-val">${escHtml(c.clan||'—')}</div></div>
+    ${c.lease ? `<div class="case-detail-field"><div class="case-detail-label">Lease / Reference</div><div class="case-detail-val">${escHtml(c.lease)}</div></div>` : ''}
+    <div class="case-detail-field"><div class="case-detail-label">Description</div><div class="case-detail-val">${escHtml(c.description||'')}</div></div>
+    <div class="case-detail-field"><div class="case-detail-label">Filed By</div><div class="case-detail-val">${escHtml(c.submitted_by||'Anonymous')}</div></div>
+    <div class="case-detail-field"><div class="case-detail-label">Filed On</div><div class="case-detail-val">${fmtDate(c.created_at||c.ts||new Date())}</div></div>
+  `;
+  document.getElementById('m-case-det').classList.add('show');
+}
+
+async function submitCase() {
+  const loc = document.getElementById('rc-loc').value.trim();
+  const clan = document.getElementById('rc-clan').value.trim();
+  const desc = document.getElementById('rc-desc').value.trim();
+  if (!loc || !clan || !desc) { showToast('Please fill all required fields', 'err'); return; }
+  const btn = document.getElementById('rc-btn');
+  btn.disabled = true; btn.textContent = 'Filing...';
+  const record = {
+    location: loc,
+    district: document.getElementById('rc-dist').value,
+    lease: document.getElementById('rc-lease').value.trim(),
+    clan, description: desc,
+    status: document.getElementById('rc-status').value,
+    submitted_by: document.getElementById('rc-auth').value.trim() || 'Anonymous',
+    created_at: nowISO(), ts: nowISO()
+  };
+  if (SUPABASE_READY) {
+    const r = await sbInsert('registry', record);
+    if (!r) { store.registry.unshift(record); saveStore(); }
+  } else {
+    store.registry.unshift(record); saveStore();
+  }
+  showToast('📋 Case filed — visible to all immediately');
+  logAudit('SUBMIT', 'REGISTRY', 'Case filed: ' + loc);
+  document.getElementById('m-case').classList.remove('show');
+  ['rc-loc','rc-dist','rc-lease','rc-clan','rc-desc','rc-auth'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = id === 'rc-status' ? 'Disputed' : '';
+  });
+  btn.disabled = false; btn.textContent = '📋 File Case — Visible to All Immediately';
+  await loadRegistry();
+}
+
+// ============================================================
+// DAO
+// ============================================================
+let allProposals = [];
+async function loadDAO() {
+  if (SUPABASE_READY) {
+    const data = await sbSelect('dao');
+    allProposals = data || store.dao;
+  } else {
+    allProposals = store.dao;
+  }
+  const active = allProposals.filter(p => p.status === 'active' || !p.status).length;
+  const totalVotes = allProposals.reduce((a,p) => a + (p.yes||0) + (p.no||0), 0);
+  const passed = allProposals.filter(p => p.status === 'passed').length;
+  document.getElementById('dao-active').textContent = active;
+  document.getElementById('dao-tvotes').textContent = totalVotes;
+  document.getElementById('dao-passed').textContent = passed;
+  document.getElementById('h-votes').textContent = totalVotes;
+  renderDAO();
+}
+
+function renderDAO() {
+  const body = document.getElementById('dao-body');
+  if (!allProposals.length) {
+    body.innerHTML = '<div class="empty"><div class="empty-ic">⚖️</div><div class="empty-tx">No proposals yet — submit the first one</div></div>';
+    return;
+  }
+  body.innerHTML = allProposals.map((p, i) => {
+    const yes = p.yes || 0, no = p.no || 0, total = yes + no;
+    const yesPct = total ? Math.round((yes/total)*100) : 0;
+    const noPct = total ? Math.round((no/total)*100) : 0;
+    return `<div class="prop-card">
+      <div class="prop-top">
+        <div class="prop-title">${escHtml(p.title||'')}</div>
+        <span class="prop-cat">${escHtml(p.category||'Other')}</span>
+      </div>
+      <div class="prop-desc">${escHtml(p.description||'')}</div>
+      <div class="vote-bar">
+        <div class="vb-yes" style="width:${yesPct}%;flex:${yes||1}"></div>
+        <div class="vb-no" style="width:${noPct}%;flex:${no||1}"></div>
+      </div>
+      <div class="vote-meta">
+        <span>✅ ${yes} For (${yesPct}%)</span>
+        <span>${escHtml(p.submitted_by||'Community')}</span>
+        <span>❌ ${no} Against (${noPct}%)</span>
+      </div>
+      <div class="vote-btns">
+        <button class="btn btn-chain btn-sm" onclick="castVote(${i},'yes')">✅ Vote For</button>
+        <button class="btn btn-outline btn-sm" onclick="castVote(${i},'no')">❌ Vote Against</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function castVote(i, type) {
+  const p = allProposals[i];
+  if (!p) return;
+  if (type === 'yes') p.yes = (p.yes||0) + 1;
+  else p.no = (p.no||0) + 1;
+  if (SUPABASE_READY && p.id) {
+    await sbFetch('dao?id=eq.' + p.id, {
+      method: 'PATCH',
+      body: JSON.stringify({ yes: p.yes, no: p.no })
+    });
+  }
+  saveStore();
+  showToast('⚖️ Vote recorded');
+  renderDAO();
+}
+
+async function submitProposal() {
+  const title = document.getElementById('pr-title').value.trim();
+  const desc = document.getElementById('pr-desc').value.trim();
+  const auth = document.getElementById('pr-auth').value.trim();
+  if (!title || !desc || !auth) { showToast('Please fill all required fields', 'err'); return; }
+  const btn = document.getElementById('pr-btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  const record = {
+    title, description: desc,
+    category: document.getElementById('pr-cat').value,
+    duration: parseInt(document.getElementById('pr-dur').value),
+    submitted_by: auth,
+    yes: 0, no: 0, status: 'active',
+    created_at: nowISO(), ts: nowISO()
+  };
+  if (SUPABASE_READY) {
+    const r = await sbInsert('dao', record);
+    if (!r) { store.dao.unshift(record); saveStore(); }
+    else { store.dao.unshift(record); saveStore(); }
+  } else {
+    store.dao.unshift(record); saveStore();
+  }
+  showToast('⚖️ Proposal submitted — community can now vote');
+  logAudit('SUBMIT', 'DAO', 'Proposal: ' + title);
+  document.getElementById('m-proposal').classList.remove('show');
+  ['pr-title','pr-desc','pr-auth'].forEach(id => { document.getElementById(id).value = ''; });
+  btn.disabled = false; btn.textContent = '⚖️ Submit for Community Vote';
+  await loadDAO();
+}
+
+// ============================================================
+// EVIDENCE VAULT
+// ============================================================
+let selectedFile = null;
+function handleFileSelect(input) {
+  selectedFile = input.files[0];
+  if (!selectedFile) return;
+  document.getElementById('vault-fname').textContent = '📎 ' + selectedFile.name;
+  document.getElementById('vault-form').style.display = 'block';
+}
+
+async function sha256(file) {
+  const buf = await file.arrayBuffer();
+  const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+  const hashArr = Array.from(new Uint8Array(hashBuf));
+  return hashArr.map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function submitEvidence() {
+  if (!selectedFile) { showToast('Please select a file', 'err'); return; }
+  const vtype = document.getElementById('v-type').value;
+  const vdesc = document.getElementById('v-desc').value.trim();
+  if (!vtype || !vdesc) { showToast('Please fill document type and description', 'err'); return; }
+  const btn = document.querySelector('#vault-form .btn-clay');
+  btn.disabled = true; btn.textContent = 'Hashing...';
+  const hash = await sha256(selectedFile);
+  const record = {
+    filename: selectedFile.name,
+    size: selectedFile.size,
+    type: vtype,
+    case_ref: document.getElementById('v-case').value.trim(),
+    description: vdesc,
+    submitted_by: document.getElementById('v-author').value.trim() || 'Anonymous',
+    hash_sha256: hash,
+    created_at: nowISO(), ts: nowISO()
+  };
+  if (SUPABASE_READY) {
+    const r = await sbInsert('evidence', record);
+    if (!r) { store.evidence.unshift(record); saveStore(); }
+    else { store.evidence.unshift(record); saveStore(); }
+  } else {
+    store.evidence.unshift(record); saveStore();
+  }
+  document.getElementById('h-docs').textContent = store.evidence.length;
+  showToast('🔒 Document fingerprinted and stored permanently');
+  logAudit('SUBMIT', 'EVIDENCE', 'File: ' + selectedFile.name + ' | SHA256: ' + hash.substring(0,16) + '...');
+  document.getElementById('vault-form').style.display = 'none';
+  document.getElementById('v-type').value = '';
+  document.getElementById('v-case').value = '';
+  document.getElementById('v-desc').value = '';
+  document.getElementById('v-author').value = '';
+  selectedFile = null;
+  document.getElementById('vault-file').value = '';
+  btn.disabled = false; btn.textContent = '🔒 Hash & Store — Shared Permanently';
+  loadEvidence();
+}
+
+async function loadEvidence() {
+  let docs = [];
+  if (SUPABASE_READY) {
+    const data = await sbSelect('evidence');
+    docs = data || store.evidence;
+  } else {
+    docs = store.evidence;
+  }
+  document.getElementById('h-docs').textContent = docs.length;
+  const body = document.getElementById('vault-body');
+  if (!docs.length) {
+    body.innerHTML = '<div class="empty"><div class="empty-ic">🔒</div><div class="empty-tx">No evidence submitted yet</div></div>';
+    return;
+  }
+  body.innerHTML = docs.map(d => `
+    <div class="vault-row">
+      <div class="vault-ico">🔒</div>
+      <div>
+        <div class="vault-name">${escHtml(d.filename||'Document')}</div>
+        <div class="vault-meta">${escHtml(d.type||'')} · ${escHtml(d.case_ref||'')} · ${escHtml(d.submitted_by||'Anonymous')}</div>
+        <div class="vault-meta" style="margin-top:2px">${escHtml(d.description||'')}</div>
+        <div class="vault-hash">SHA-256: ${d.hash_sha256||'—'}</div>
+      </div>
+      <div class="vault-meta">${fmtDate(d.created_at||d.ts||new Date())}</div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// TANO AI — calls proxy function with web search enabled
+// ============================================================
+const AI_SYSTEM = `You are TANO AI, the official AI assistant of the TANO platform — PNG's Land Justice Platform for Central Province and Rigo District.
+
+You have access to web search. Use it proactively for:
+- Current PNG news, court judgments, and political developments
+- Live status of land cases, SABLs, mining licenses
+- Recent government policy changes and NEC decisions
+- Current electoral matters and 2027 NGE developments
+- Any question where recent information matters
+
+You are deeply knowledgeable about:
+- Papua New Guinea land law: the ILG Act 2009, Customary Land Tenure Act 2026, Land Act 1996, Land Registration Act
+- Free Prior and Informed Consent (FPIC) and Development Forum procedures
+- Special Agricultural and Business Leases (SABL) — history, challenges, legal remedies
+- The nine-step ILG registration process
+- DDA accountability under the DDA Act 2014, Public Finance Management Act 1995, Audit Act 1989
+- Section 51 of the PNG Constitution — right of access to official documents
+- Ombudsman Commission, OLICAC 2020, Leadership Code
+- Central Province governance: Rigo District, three LLGs (Rigo Central Rural, Rigo Coastal Rural, Rigo Inland Rural), 67 wards
+- The Mamalo Limestone project, Launakalana boundary disputes, Rigo Rice SABL concerns
+- IPA registration, Association incorporation, RFi governance structure
+- Electoral integrity, common roll verification, Electoral Petitions under the Organic Law on National Elections
+- Vision 2050 PNG, PPCM Papua Provinces Collaboration Movement
+- Community organising, ward-level advocacy, whistleblower protection
+
+Respond in clear, accessible English. When relevant, acknowledge Tok Pisin speakers. Be direct, practical, and grounded in actual PNG law. When you cite a law or section, cite it correctly. When you use web search, briefly note what you found and when. Encourage people to document their issues on TANO. Keep responses concise but thorough — 150 to 300 words unless a detailed breakdown is specifically needed.`;
+
+const aiConversations = { home: [], petition: [], registry: [], dao: [], evidence: [] };
+
+// Detect if we are on Netlify (production) or local
+const AI_ENDPOINT = window.location.hostname.includes('netlify.app')
+  ? '/api/ai'
+  : 'https://api.anthropic.com/v1/messages';
+
+const USE_PROXY = window.location.hostname.includes('netlify.app');
+
+async function askAI(module, question) {
+  if (!question || !question.trim()) return;
+  const msgs = document.getElementById('ai-msgs-' + module);
+  const inp = document.getElementById('ai-in-' + module);
+  const typing = document.getElementById('typing-' + module);
+  if (inp) inp.value = '';
+
+  // Add user message
+  msgs.innerHTML += `<div class="ai-m user"><div class="ai-av u">G</div><div class="ai-bub">${escHtml(question)}</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Show typing
+  if (typing) typing.classList.add('show');
+
+  // Track conversation
+  aiConversations[module].push({ role: 'user', content: question });
+  logAudit('AI_QUERY', module.toUpperCase(), question.substring(0, 80));
+
+  try {
+    let answer = '';
+    let searched = false;
+    let searchQueries = [];
+
+    if (USE_PROXY) {
+      // Production: use Netlify proxy with web search
+      const response = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: AI_SYSTEM,
+          messages: aiConversations[module].slice(-10)
+        })
+      });
+      if (!response.ok) throw new Error('Proxy error ' + response.status);
+      const data = await response.json();
+      answer = data.text || 'I could not process that. Please try again.';
+      searched = data.searched || false;
+      searchQueries = data.searchQueries || [];
+    } else {
+      // Local/preview: call Anthropic directly (no web search)
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: AI_SYSTEM,
+          messages: aiConversations[module].slice(-10)
+        })
+      });
+      if (!response.ok) throw new Error('API error ' + response.status);
+      const data = await response.json();
+      answer = data.content?.[0]?.text || 'I could not process that. Please try again.';
+    }
+
+    aiConversations[module].push({ role: 'assistant', content: answer });
+    if (typing) typing.classList.remove('show');
+
+    // Show web search indicator if search was used
+    const searchBadge = searched
+      ? `<div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--chain);margin-bottom:6px;opacity:0.8">⬡ Web searched: ${searchQueries.map(q => escHtml(q)).join(' · ')}</div>`
+      : '';
+    const sourcesBadge = (data.sources && data.sources.length)
+      ? `<div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--text3);margin-top:6px">Sources: ${data.sources.map(s => escHtml(s)).join(' · ')}</div>`
+      : '';
+
+    msgs.innerHTML += `<div class="ai-m"><div class="ai-av b">T</div><div class="ai-bub">${searchBadge}${escHtml(answer)}${sourcesBadge}</div></div>`;
+
+  } catch (err) {
+    if (typing) typing.classList.remove('show');
+    const fallback = getFallback(question);
+    msgs.innerHTML += `<div class="ai-m"><div class="ai-av b">T</div><div class="ai-bub">${escHtml(fallback)}</div></div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function getFallback(q) {
+  const ql = q.toLowerCase();
+  if (ql.includes('ilg') || ql.includes('incorporated land group')) {
+    return 'An Incorporated Land Group (ILG) is the only legally recognised body to represent a landowning clan in PNG. The nine-step registration process starts with a clan meeting to elect officers, then drafting a constitution, then lodging with the Registrar of ILGs. Under the Customary Land Tenure Act 2026, any development negotiation without a registered ILG has no valid legal foundation. RFi can assist with facilitation at no cost.';
+  }
+  if (ql.includes('dda') || ql.includes('dsip') || ql.includes('acquittal')) {
+    return 'The DDA (District Development Authority) is legally required to acquit all public funds under the Public Finance Management Act 1995 and DDA Act 2014. Section 51 of the PNG Constitution gives every citizen the right of reasonable access to official documents including financial records. Rigo DDA has received approximately K114 million since 2015 with no public acquittal on record. File a formal request citing Section 51 and escalate to the Ombudsman Commission under OLICAC 2020 if no response within 30 working days.';
+  }
+  if (ql.includes('sabl') || ql.includes('special agricultural')) {
+    return 'Special Agricultural and Business Leases (SABLs) have been widely misused across PNG to alienate customary land. The 2011 Commission of Inquiry found most SABLs were illegally granted without proper FPIC. Legal challenges proceed through the Land Court and National Court. Strong evidence includes original land titles, clan genealogies, witness statements, and proof that FPIC was not obtained. File your case on the TANO Registry immediately to create a permanent record.';
+  }
+  if (ql.includes('fpic') || ql.includes('consent') || ql.includes('development forum')) {
+    return 'Free, Prior and Informed Consent (FPIC) is required under the Customary Land Tenure Act 2026 before any development can proceed on customary land. The Development Forum must include all registered ILG representatives, not individuals. "Prior" means before any agreement is signed. "Informed" means full disclosure of all project terms. "Free" means no coercion or inducement. Any agreement signed without proper FPIC can be challenged in the Land Court.';
+  }
+  return 'TANO AI is temporarily offline. Your question has been noted. For urgent land law matters, contact CELCOR (Centre for Environmental Law and Community Rights) for pro-bono legal advice, or file your case directly on the TANO Land Fraud Registry to create a permanent record.';
+}
+
+// ============================================================
+// EXPORT CSV
+// ============================================================
+function exportCSV(type) {
+  const data = store[type === 'signatures' ? 'signatures' : type === 'registry' ? 'registry' : type === 'dao' ? 'dao' : 'evidence'];
+  if (!data.length) { showToast('No data to export yet', 'err'); return; }
+  logAudit('EXPORT', type.toUpperCase(), data.length + ' records downloaded');
+  const keys = Object.keys(data[0]);
+  const csv = [keys.join(','), ...data.map(row => keys.map(k => JSON.stringify(row[k]||'')).join(','))].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'tano-' + type + '-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  showToast('↓ Export downloaded — logged in audit trail');
+}
+
+// ============================================================
+// AUDIT LOG
+// ============================================================
+const auditStore = JSON.parse(localStorage.getItem('tano_audit') || '[]');
+function saveAudit() {
+  try { localStorage.setItem('tano_audit', JSON.stringify(auditStore.slice(0, 500))); } catch(e){}
+}
+
+// Generate a browser fingerprint (non-identifying session token)
+function getFingerprint() {
+  let fp = sessionStorage.getItem('tano_fp');
+  if (!fp) {
+    fp = 'FP-' + Math.random().toString(36).substr(2,9).toUpperCase() + '-' + Date.now().toString(36).toUpperCase();
+    sessionStorage.setItem('tano_fp', fp);
+  }
+  return fp;
+}
+
+async function logAudit(action, module, detail = '') {
+  const entry = {
+    ts: nowISO(),
+    action,
+    module,
+    detail,
+    fingerprint: getFingerprint(),
+    ua: navigator.userAgent.substring(0, 80),
+    created_at: nowISO()
+  };
+  auditStore.unshift(entry);
+  saveAudit();
+  // Also write to Supabase if connected
+  if (SUPABASE_READY) {
+    await sbInsert('audit_log', entry).catch(() => {});
+  }
+}
+
+async function loadAudit() {
+  let entries = [];
+  if (SUPABASE_READY) {
+    const data = await sbSelect('audit_log');
+    entries = data || auditStore;
+  } else {
+    entries = auditStore;
+  }
+  renderAudit(entries);
+}
+
+function renderAudit(entries) {
+  const body = document.getElementById('audit-body');
+  if (!entries.length) {
+    body.innerHTML = '<div class="empty"><div class="empty-ic">📊</div><div class="empty-tx">No audit entries yet</div></div>';
+    document.getElementById('audit-downloads').textContent = '0';
+    document.getElementById('audit-unique').textContent = '0';
+    document.getElementById('audit-today').textContent = '0';
+    return;
+  }
+  // Stats
+  const downloads = entries.filter(e => e.action === 'EXPORT').length;
+  const unique = new Set(entries.map(e => e.fingerprint)).size;
+  const today = new Date().toDateString();
+  const todayCount = entries.filter(e => new Date(e.ts).toDateString() === today).length;
+  document.getElementById('audit-downloads').textContent = downloads;
+  document.getElementById('audit-unique').textContent = unique;
+  document.getElementById('audit-today').textContent = todayCount;
+
+  body.innerHTML = entries.slice(0, 100).map(e => `
+    <div class="audit-row">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--text3)">${fmtDate(e.ts)}<br>${new Date(e.ts).toLocaleTimeString('en-PG')}</div>
+      <div><span class="audit-tag">${escHtml(e.action||'')}</span><div style="font-size:0.75rem;color:var(--text3);margin-top:3px">${escHtml(e.detail||'')}</div></div>
+      <div style="font-size:0.82rem;font-weight:500">${escHtml(e.module||'')}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--text3);word-break:break-all">${escHtml(e.fingerprint||'')}</div>
+    </div>
+  `).join('');
+}
+
+function exportAuditCSV() {
+  const entries = auditStore;
+  if (!entries.length) { showToast('No audit entries yet', 'err'); return; }
+  logAudit('EXPORT', 'Audit Log', 'Full audit log exported');
+  const keys = ['ts','action','module','detail','fingerprint'];
+  const csv = [keys.join(','), ...entries.map(row => keys.map(k => JSON.stringify(row[k]||'')).join(','))].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'tano-audit-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  showToast('📊 Audit log exported');
+}
+
+// ============================================================
+// SECURITY
+// ============================================================
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', async () => {
+  logAudit('VISIT', 'HOME', 'Platform accessed');
+  // Update home stats from local store immediately
+  document.getElementById('h-sigs').textContent = store.signatures.length || '—';
+  document.getElementById('h-cases').textContent = store.registry.length || '—';
+  document.getElementById('h-votes').textContent = store.dao.reduce((a,p)=>a+(p.yes||0)+(p.no||0),0) || '—';
+  document.getElementById('h-docs').textContent = store.evidence.length || '—';
+
+  // Check database
+  if (!SUPABASE_READY) {
+    document.getElementById('db-status').textContent = '⬡ Local Mode';
+    document.getElementById('db-status').className = 'db-status';
+    document.getElementById('db-status').style.color = 'var(--gold)';
+  } else {
+    const test = await sbSelect('signatures', 'limit=1');
+    if (test !== null) {
+      document.getElementById('db-status').textContent = '⬡ Live · Shared';
+    } else {
+      document.getElementById('db-status').textContent = '⬡ Reconnecting';
+      document.getElementById('db-status').className = 'db-status db-err';
+    }
+  }
+});
+</script>
+</body>
+</html>
